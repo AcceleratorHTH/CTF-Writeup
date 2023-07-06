@@ -1,0 +1,1 @@
+Chỉ cần chạy file rsa.py trong pro là dựng oke.
