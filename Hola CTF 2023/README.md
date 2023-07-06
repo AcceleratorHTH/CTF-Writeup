@@ -24,9 +24,9 @@ ETR_c1r_YH{h_4LFn3Cp3_535}C313_h14
 ```
 
 Ở đây, mình để tên là Cát Linh – Hà Đông bởi mình sử dụng rail-fence cipher (mã hóa đường tàu) để mã hóa flag. Các bạn chỉ cần ném nó lên một trang web bất kì hoặc giải tay nếu muốn thử thách bản thân.
-```
+
 Flag: EHC{Th3_R41L_F3nc3_C1ph3r_15_345Y}
-```
+
 2/ 221B
 
 I found a piece of paper on the desk of a friend who is passionate about playing the violin. I have illustrated it in the image below. Can you help me solve it?
