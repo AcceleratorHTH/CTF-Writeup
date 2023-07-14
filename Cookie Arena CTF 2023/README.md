@@ -128,14 +128,14 @@ def xor_shift_right_func(data,bit_loc):
 
 Khi data >> 1, bit đầu của data bây giờ sẽ là 0. Khi đó, ta chỉ cần lấy bit tại cùng vị trí của kết quả XOR với 0, sẽ ra được bit đầu của data gốc. Để dễ hiểu hơn thì:
 
-Giả sử data = **1011010**
-và data >> 1 = 0**101101** (số 0 được thêm vào cho phép dịch)
-XOR:
-**1011010**
-0**101101** 
+Giả sử data = **1011010**\
+và data >> 1 = 0**101101** (số 0 được thêm vào cho phép dịch)\
+XOR:\
+**1011010**\
+0**101101** \
 1110111
 
-Vậy thì ở đây, ta chỉ cần cho bit đầu của kết quả XOR với 0 sẽ ra bit đầu của data. Lấy bit đầu đó XOR với bit thứ 2 của new_data, sẽ ra được bit 2 của data gốc. Cứ như thế sẽ ra được data gốc.
+Vậy thì ở đây, ta chỉ cần cho bit đầu của kết quả XOR với 0 sẽ ra bit đầu của data. Lấy bit đầu đó XOR với bit thứ 2 của new_data, sẽ ra được bit 2 của data gốc. Cứ như thế sẽ ra được data gốc.\
 Ý tưởng ở đây sẽ là tạo ra mảng chứa 1 bit 0 trước, lấy bit 0 đó XOR với bit đầu của new_data. Ra kết quả bao nhiêu sẽ add lại vào mảng trên để XOR tiếp với bit thứ 2 của new_data. Cứ như thế sau khi XOR hết, xóa số 0 ban đầu của mảng đi, ta sẽ được data gốc.
 ```python3
 def rev_xor_shift_right_func(data):
@@ -162,14 +162,15 @@ Với hàm này, hãy để ý 0xffffffff là số lẻ trong decimal. Từ đó
 ```
 a & b = a % (b+1) với b lẻ
 ```
-new_data = (data * mul) % (0xffffffff + 1)
+new_data = (data * mul) % (0xffffffff + 1)\
 hay (data * mul) ≡ new_data % (0xffffffff + 1)
+
 Sử dụng nghịch đảo modun của mul để giải phương trình trên, giải thích cho điều này:
 
-(data * mul) ≡ new_data % (0xffffffff + 1)
-<=> data * mul * mul^-1 ≡ (new_data * mul^-1) % (0xffffffff + 1)
-Mà mul * mul^-1 = 1(t/c nghịch đảo modun)
-<=> data ≡ (new_data * mul^-1) % (0xffffffff + 1)
+(data * mul) ≡ new_data % (0xffffffff + 1)\
+<=> data * mul * mul^-1 ≡ (new_data * mul^-1) % (0xffffffff + 1)\
+Mà mul * mul^-1 = 1(t/c nghịch đảo modun)\
+<=> data ≡ (new_data * mul^-1) % (0xffffffff + 1)\
 Với data < (0xffffffff + 1), data % (0xffffffff + 1) sẽ bằng data
 ```python3
 def rev_mul_func(data, mul):
