@@ -1,4 +1,16 @@
-## Cryptography Writeup
+# **Cookie\_Arena\_CTF\_2023**
+
+# **CRYPTOGRAPHY WRITEUP**
+
+## **Author:**
+
+- Pham Quoc Trung
+
+## **Used Language:**
+
+- Python3
+
+## **Problem Solving:**
 
 ### Basic Operator
 Sử dụng kiến thức toán học và cấu trúc đại số để giải mã flag
