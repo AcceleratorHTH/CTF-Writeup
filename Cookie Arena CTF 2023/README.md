@@ -13,7 +13,7 @@
 ## **Problem Solving:**
 
 ### Basic Operator
-Sử dụng kiến thức toán học và cấu trúc đại số để giải mã flag
+Sử dụng kiến thức toán học và cấu trúc đại số để giải mã flag\
 **Format FLAG: CHH{XXX}**
 
 Attachment:
