@@ -222,7 +222,7 @@ print(unpadding_pkcs7(data6))
 
 Flag: CHH{w3lc0m3_70_7h3_m47h_w0rld(1_h4t3_1t_th3r3)}
 
-À quên, đây là mình trình bày code để các bạn có thể step-by-step các bước. Final code mình sẽ để [ở đây]() nhé :v
+À quên, đây là mình trình bày code để các bạn có thể step-by-step các bước. Final code mình sẽ để [ở đây](https://github.com/AcceleratorHTH/CTF-Writeup/blob/main/Cookie%20Arena%20CTF%202023/Source/basicoperator.py) nhé :v
 
 ### Knapsack Ls
 Hệ thống mã hóa giựa trên bài toán Knapsack (bài toán xếp ba lô) đã bị coi là lỗi thời, nhưng điều đó không có nghĩa là nó có thể bị phá giải quá dễ dàng. Dựa vào implementation của mã hóa Knapsack trong knapsack.py, giải mã cipher để thu hồi flag.\
