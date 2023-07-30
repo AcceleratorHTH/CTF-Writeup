@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
 Thử chạy code, mọi thứ đều ổn áp, và mình chỉ cần ngồi đợi cho tool giải mã ra flag. Mode ở đây được detect là ECB (Không biết do mình xài WSL hay gì mà có vẻ hơi lâu :v. Các bạn có thể thử test nhé)
 
-Flag: TFCCTF{gu355_th4t_w4s_345y...Wh4(chưa xong)
+Flag: TFCCTF{gu355_th4t_w4s_345y...Wh4T-AboUt_Th3_0th3r_0n3?}
 
 ### AES CTF TOOL V2
 Same as the last one, but V2!
