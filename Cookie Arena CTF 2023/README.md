@@ -537,3 +537,5 @@ if __name__ == '__main__':
 Ở đây, challenge đã cho mình sẵn n, l, c. Việc cần làm của mình ở đây là tìm ra d để có thể giải mã RSA. Để tìm được d thì phải biết phi, nghĩa là phải tính được p,q.  Tuy nhiên, vấn đề ở chỗ p và q là 2 số nguyên tố lớn vl (1024-bit). Để mà factor được n dường như là điều không thể. Vậy thì tìm p,q thế nào bây giờ?
 
 Có một dữ kiện được leak ra là l = (p & q) * (p ^ q) | 0x1337. Với
+
+**© 2023,Pham Quoc Trung. All rights reserved.**
