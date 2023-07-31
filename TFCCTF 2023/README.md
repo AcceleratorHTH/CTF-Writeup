@@ -328,41 +328,4 @@ print(output_ascii)
 ```
 Flag: TFCCTF{N0t3W0rthy_m3ss4g3}
 
-### FERMENTATION
-Welcome to **FERMENTATION**, a wacky world where pickling isn't just for cucumbers and AES isn't a gloomy cipher! In this cryptic concoction, expect to decrypt pickled objects and juggle AES keys. So, dust off your coder's hat and jump into this zesty challenge – it's time to get yourself into a real pickle!
-
-Attachment: server.py
-```python3
-#!/usr/bin/env python3
-import pickle
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-import os
-
-KEY = os.urandom(16)
-IV = os.urandom(16)
-FLAG = 'redacted'
-
-header = input("Header: ")
-name = input("Name: ")
-is_admin = False
-
-data = header.encode() + pickle.dumps((name, is_admin))
-
-encrypted = AES.new(KEY, AES.MODE_CBC, IV).encrypt(pad(data, 16))
-print(encrypted.hex())
-
-while True:
-    data = bytes.fromhex(input().strip())
-    try:
-        if pickle.loads(unpad(AES.new(KEY, AES.MODE_CBC, IV).decrypt(data),16)[len(header):])[1] == 1:
-            print(FLAG)
-        else:
-            print("Wait a minute, who are you?")
-    except:
-        print("Wait a minute, who are you?")
-```
-
-```
-nc challs.tfcctf.com 31040
-```
+**© 2023,Pham Quoc Trung. All rights reserved.**
