@@ -11,6 +11,8 @@
 - Python3
 
 ## **Problem Solving:**
+![image](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/e3cfe1dc-7ae4-42b5-9f19-46e6f14570dc)
+
 
 ### Basic Operator
 Sử dụng kiến thức toán học và cấu trúc đại số để giải mã flag\
