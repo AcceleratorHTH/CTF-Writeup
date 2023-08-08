@@ -6,10 +6,6 @@
 
 - Pham Quoc Trung
 
-## **Used Language:**
-
-- Python3
-
 ## **Problem Solving:**
 ### Very Basic
 Sometimes, we need to oscillate To and fro? things become tough when interwoven together.
