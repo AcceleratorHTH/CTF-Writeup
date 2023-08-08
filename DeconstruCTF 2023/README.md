@@ -58,7 +58,7 @@ H_R}Z28AJI5?28F~
 ```
 Mình có thử ném đề bài cho GPT-4 và AI hướng cho mình đến một thuật toán caesar liên quan đến QWERTY. Cứ thử tin xem như nào, mình tìm từ khóa "QWERTY Caesar cipher" và mình thấy kết quả trả về ["Keyboard Shift Cipher"](https://www.dcode.fr/keyboard-shift-cipher). Mình thử ghi cipher vô nhưng không ra. Tuy nhiên mình đã điền cipher gốc, thử với cipher sau khi ROT13 và mình ra được flag
 
-![Screenshot 2023-08-08 000646](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/9228d77a-6c67-473c-a03c-17ffd071d197)
+![Screenshot 2023-08-08 000646](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/8748385d-8aa1-4730-bb0d-eb18a331add4)
 
 Flag: DSC{V17_QU4L17Y}
 
