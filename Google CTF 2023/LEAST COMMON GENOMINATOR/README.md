@@ -12,7 +12,7 @@
 
 **Problem Solving:**
 
-###LEAST COMMON GENOMINATOR?
+### LEAST COMMON GENOMINATOR?
 
 Someone used this program to send me an encrypted message but I can't read it! It uses something called an LCG, do you know what it is? I dumped the first six consecutive values generated from it but what do I do with it?!
 
