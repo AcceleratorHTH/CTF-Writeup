@@ -124,6 +124,48 @@ Bài này sử dụng một ngôn ngữ khá hay ho mà mình đã từng sử d
 
 Flag: flag{c0ngratulat10ns_y0u_l3arnt_c0w_lang}
 
+### Xory
+Xory Xory yes pappa, eating FLAG? No papa…
+
+nc 114.119.185.67 1338
+
+Attachment: *chal.py*
+```python3
+import random
+
+def xory(msg, key):
+    ct = []
+    for i in range(len(msg)):
+        ct.append(msg[i] ^ key[i%len(key)])
+    return bytes(ct)
+
+KEY = random.randbytes(5)
+FLAG = open('/app/flag.txt', 'rb').read()
+
+cipher = xory(FLAG, KEY)
+print(cipher.hex())
+```
+Bài này chỉ đơn giản là sử dụng XOR để mã hóa dữ liệu với KEY được tạo ra thông qua thuật toán random. Nhận thấy form của flag là "flag{", đủ 5 ký tự, mình sẽ XOR cipher với nó và lấy 5-bytes đầu thu được làm KEY xem sao
+```python3
+cipher = "885efce6b5b602cfdeffdb6deab2fa856dace7919702e8dea58002eade85be73e08b"
+cipher = bytes.fromhex(cipher)
+
+def xory(msg, key):
+    ct = []
+    for i in range(len(msg)):
+        ct.append(msg[i] ^ key[i%len(key)])
+    return bytes(ct)
+
+flag = b'flag{'
+
+KEY = xory(cipher, flag)[:5] 
+
+print(xory(cipher, KEY))
+```
+Và mình ra được flag lun :v Có vẻ đây vẫn là một chal khá basic.
+
+Flag: flag{X0R_15_w34k_1f_y0u_kn0w_KPA}
+
 ### Trial Challenge - Before Qualifying Round
 This code challenges participants to decrypt a given block cipher ciphertext using a specific decryption algorithm.
 
@@ -132,7 +174,7 @@ Participants are required to understand the decryption process, implement the ne
 Note : The flag format is typically **flag{...}** where the content inside the curly braces is the solution to the challenge.
 
 Attachment: *BlockCIpher.py*
-```python
+```python3
 import struct
 import sys
 import base64
@@ -178,7 +220,7 @@ block>>16: 0000000000000000**0110011101100001**\
 => XOR: **0110011101100001**0110110001100110
 
 Vậy ta hoàn toàn có thể tạo ra block>>16 từ kết quả và xor nó với kết quả để lấy được block ban đầu nhờ tính đối xứng của XOR. Ghép các khối đó lại, ta sẽ có được flag. Dưới đây là code python cho bài này
-```python
+```python3
 import base64
 from Crypto.Util.number import *
 
