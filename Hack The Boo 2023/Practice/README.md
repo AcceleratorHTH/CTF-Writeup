@@ -1,21 +1,26 @@
-# **Hack The Boo 2023 - Practice**
+# Practice
 
-# **CRYPTOGRAPHY WRITEUP**
+## **Hack The Boo 2023 - Practice**
 
-## **Author:**
+## **CRYPTOGRAPHY WRITEUP**
 
-- Pham Quoc Trung
+### **Author:**
 
-## **Used Language:**
+* Pham Quoc Trung
 
-- Python3
+### **Used Language:**
 
-## **Problem Solving:**
-### Hexoding
+* Python3
+
+### **Problem Solving:**
+
+#### Hexoding
+
 In order to be a successful ghost in the modern society, a ghost must fear nothing. Caspersky always loved scaring people, but he could not reach his maximum potential because he was fearful of cryptography. This is why he wants to join the Applied Cryptography Academy of Ghosts. To gain admission, the professors give you a challenge that you need to solve. They try to spook you with weird functions, but don't be scared; the challenge can be solved even without the source code. Can you help Caspersky pass the entrance exams?
 
-Attachments: *source.py*
-```python3
+Attachments: _source.py_
+
+```python
 from secret import FLAG
 
 HEX_CHARS = '0123456789abcdef'
@@ -61,7 +66,9 @@ def main():
 
 main()
 ```
-*output.txt*
+
+_output.txt_
+
 ```
 4854427b6b6e3077316e675f6830775f74305f3164336e743166795f336e633064316e675f736368336d33735f31735f6372756331346c5f6630725f615f
 Y3J5cHQwZ3I0cGgzcl9fXzRsczBfZDBfbjB0X2MwbmZ1czNfZW5jMGQxbmdfdzF0aF9lbmNyeXA1MTBuIX0=
@@ -69,13 +76,15 @@ Y3J5cHQwZ3I0cGgzcl9fXzRsczBfZDBfbjB0X2MwbmZ1czNfZW5jMGQxbmdfdzF0aF9lbmNyeXA1MTBu
 
 Đọc lướt qua thì output chỉ đơn giản là 1 dòng hex và 1 dòng base64 là 2 mảnh của flag. Đáp lên CyberChef là ra flag thoai.
 
-Flag: *HTB{kn0w1ng_h0w_t0_1d3nt1fy_3nc0d1ng_sch3m3s_1s_cruc14l_f0r_a_crypt0gr4ph3r___4ls0_d0_n0t_c0nfus3_enc0d1ng_w1th_encryp510n!}*
+Flag: _HTB{kn0w1ng\_h0w\_t0\_1d3nt1fy\_3nc0d1ng\_sch3m3s\_1s\_cruc14l\_f0r\_a\_crypt0gr4ph3r\_\_\_4ls0\_d0\_n0t\_c0nfus3\_enc0d1ng\_w1th\_encryp510n!}_
 
-### SPG
+#### SPG
+
 After successfully joining the academy, there is a process where you have to log in to eclass in order to access notes in each class and get the current updates for the ongoing prank labs. When you attempt to log in, though, your browser crashes, and all your files get encrypted. This is yet another prank for the newcomers. The only thing provided is the password generator script. Can you crack it, unlock your files, and log in to the spooky platform?
 
-Attachments: *source.py*
-```python3
+Attachments: _source.py_
+
+```python
 from hashlib import sha256
 import string, random
 from secret import MASTER_KEY, FLAG
@@ -111,19 +120,23 @@ def main():
 main()
 
 ```
-*output.txt*
+
+_output.txt_
+
 ```
 Your Password : gBv#3%DXMV*7oCN2M71Zfe0QY^dS3ji7DgHxx2bNRCSoRPlVRRX*bwLO5eM&0AIOa&#$@u
 Encrypted Flag : tnP+MdNjHF1aMJVV/ciAYqQutsU8LyxVkJtVEf0J0T5j8Eu68AxcsKwd0NjY9CE+Be9e9FwSVF2xbK1GP53WSAaJuQaX/NC02D+v7S/yizQ=
 ```
-Mấu chốt của bài này là tìm ra `MASTER_KEY` làm key cho vào AES_CBC để giải ra flag.
 
-Ban đầu, `MASTER_KEY` được chuyển thành 1 số nguyên `master_key` theo Little-Endian. Password được tạo ra bằng cách chia `ALPHABET` ra làm 2 nửa. Nếu bit cuối cùng của `master_key` = 1 thì thêm vào password kí tự ngẫu nhiên ở nửa trái của `ALPHABET`, nếu là 0 thì ngược lại. Ta hoàn toàn có thể khôi phục từng bit của `master_key` bằng cách so sánh từng kí tự của password xem nó thuộc nửa nào của `ALPHABET`. Nếu nửa bên trái thì bit cuối cùng của `master_key` bằng 1, ngược lại thì là 0. 
+Mấu chốt của bài này là tìm ra `MASTER_KEY` làm key cho vào AES\_CBC để giải ra flag.
+
+Ban đầu, `MASTER_KEY` được chuyển thành 1 số nguyên `master_key` theo Little-Endian. Password được tạo ra bằng cách chia `ALPHABET` ra làm 2 nửa. Nếu bit cuối cùng của `master_key` = 1 thì thêm vào password kí tự ngẫu nhiên ở nửa trái của `ALPHABET`, nếu là 0 thì ngược lại. Ta hoàn toàn có thể khôi phục từng bit của `master_key` bằng cách so sánh từng kí tự của password xem nó thuộc nửa nào của `ALPHABET`. Nếu nửa bên trái thì bit cuối cùng của `master_key` bằng 1, ngược lại thì là 0.
 
 Sau khi ra được `master_key`, ta chuyển nó sang dạng bytes và đảo ngược lại (vì là Little-Endian) sẽ ra được `MASTER_KEY` ban đầu.
 
 Dưới đây là code thực thi:
-```python3
+
+```python
 from hashlib import sha256
 import string
 from Crypto.Cipher import AES
@@ -161,13 +174,15 @@ plaintext = unpad(cipher.decrypt(ciphertext), 16)
 print(plaintext)
 ```
 
-Flag: *HTB{00ps___n0t_th4t_h4rd_t0_r3c0v3r_th3_m4st3r_k3y_0f_my_p4ssw0rd_g3n3r4t0r}*
+Flag: _HTB{00ps\_\_\_n0t\_th4t\_h4rd\_t0\_r3c0v3r\_th3\_m4st3r\_k3y\_0f\_my\_p4ssw0rd\_g3n3r4t0r}_
 
-### yence
+#### yence
+
 During the pranking labs, the ghosts create a spooky encryption algorithm, and at midnight, they go outside to scare people by encrypting every device they own. To assess the situation at the end of the night, the professors have developed a spooky meter to measure how much people were spooked by the ransomware. The goal is to create irreversible ransomware that inflicts maximum damage. However, having interacted with humans over the past months, you've grown fond of them and don't want to harm them. You even managed to befriend a human who fell victim to such an attack. Can you help your friend unlock his files?
 
-Attachments: *source.py*
-```python3
+Attachments: _source.py_
+
+```python
 from Crypto.Util import Counter
 from Crypto.Util.Padding import pad
 from Crypto.Cipher import AES
@@ -209,7 +224,9 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-*messages.txt*
+
+_messages.txt_
+
 ```
 [
     'Hm, I have heard that AES-CTR is a secure encryption mode!',
@@ -218,39 +235,46 @@ if __name__ == '__main__':
     'This is why I used it to encrypt my secret information above, hehe.',
 ]
 ```
-*output.txt*
+
+_output.txt_
+
 ```
 983641d252da35432cdd8aaa490b24bc5ac0583f5881adbe95c5b16d4309878a37c0d38d523f2b45390294e7ed7fe276a1ac966868a34e1284f6215389342b35
 3394443645cf87dbaf9cd2506209809663818391442f37553047d1fde12df974b0a4922621ba0d5693be403dfb0d2f31
 5ff5b1855a683504035184fbbd52e236a09ac86879ba10428de65d66d0065f412ed765fb2593aef817a6c59ed373ee8192ab659a30b06723ee9d363e00e2c7f7
 81ad907568a7525696bf5e75c61258407fca36cd25dbe9c845f2cc95d555e9c1cbbb12b44ddb0a5f85e71859608aa68b271836560e3ecabde06ca9dddd35c9dd027436cf1facf536e9b7a51d5d09bbf5
 ```
-Ở đây, tác giả sử dụng AES_CTR cho từng message một (mỗi lần encrypt là một lần gọi AES_CTR mới). Key của mỗi cái cũng là 16-bytes random, gần như không thể brute-force nổi. Có thể nói rằng thử thách này không thể khai thác bằng các lỗ hổng CTR thông thường. Vậy thử đọc kĩ code xem có điều gì vô tình tạo ra điểm yếu không?
+
+Ở đây, tác giả sử dụng AES\_CTR cho từng message một (mỗi lần encrypt là một lần gọi AES\_CTR mới). Key của mỗi cái cũng là 16-bytes random, gần như không thể brute-force nổi. Có thể nói rằng thử thách này không thể khai thác bằng các lỗ hổng CTR thông thường. Vậy thử đọc kĩ code xem có điều gì vô tình tạo ra điểm yếu không?
 
 Và mình tìm ra có điều bất thường ở đoạn code này:
-```python3
+
+```python
 self.CTRs = [Counter.new(block_size, initial_value=i) for i in range(len(MSG))]
 ```
+
 `initial_value` =`i`, và `i` được chạy trong `range(len(MSG))`, ở đây là từ 0 tới 3. Điều này tạo ra nguy hiểm gì?
 
-Để hiểu phần sau mình sẽ để lại sơ đồ AES_CTR ở đây:
-![Screenshot 2023-10-04 170632](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/064c75f6-c501-456c-a156-220310916477)
-
+Để hiểu phần sau mình sẽ để lại sơ đồ AES\_CTR ở đây: ![Screenshot 2023-10-04 170632](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/064c75f6-c501-456c-a156-220310916477)
 
 Ở đây mình có tính được độ dài của 4 output lần lượt là 64, 48, 64 và 80-bytes. Dựa trên code trên, counter của từng cái sẽ đếm theo thứ tự như sau:
+
 ```
 Msg1: 0, 1, 2, 3
 Msg2: 1, 2, 3
 Msg3: 2, 3, 4, 5
 Msg4: 3, 4, 5, 6, 7
 ```
-Ứng với 1 giá trị của `iv`, `block cypher encryption` sẽ luôn không đổi. Thứ ta cần tìm là message thứ 3 chứa flag, 3  message còn lại đã biết rõ. Vì vậy, ta có thể tính các block encrypt có iv = 2,3,4,5 từ các message đã biết để tìm ra flag. Để ví dụ:
-- `block encryption iv = 2` = `block thứ 3 của msg1` XOR `block thứ 3 của cipher1`
-- Khi đó, `block đầu tiên của msg3` =  `block encryption iv = 2` XOR `block đầu của cipher3`
-- Tương tự với các block còn lại
+
+Ứng với 1 giá trị của `iv`, `block cypher encryption` sẽ luôn không đổi. Thứ ta cần tìm là message thứ 3 chứa flag, 3 message còn lại đã biết rõ. Vì vậy, ta có thể tính các block encrypt có iv = 2,3,4,5 từ các message đã biết để tìm ra flag. Để ví dụ:
+
+* `block encryption iv = 2` = `block thứ 3 của msg1` XOR `block thứ 3 của cipher1`
+* Khi đó, `block đầu tiên của msg3` = `block encryption iv = 2` XOR `block đầu của cipher3`
+* Tương tự với các block còn lại
 
 Code thực thi:
-```python3
+
+```python
 from pwn import *
 from Crypto.Util.Padding import pad, unpad
 
@@ -290,6 +314,6 @@ flag = flag1 + flag2 + flag3 + flag4
 print(unpad(flag, 16))
 ```
 
-Flag: *HTB{m4k3_sur3_y0u_1n1t14l1z3_4rr4ys_th3_r1ght_w4y}*
+Flag: _HTB{m4k3\_sur3\_y0u\_1n1t14l1z3\_4rr4ys\_th3\_r1ght\_w4y}_
 
 **© 2023,Pham Quoc Trung. All rights reserved.**
