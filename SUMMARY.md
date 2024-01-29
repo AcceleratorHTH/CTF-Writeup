@@ -31,4 +31,3 @@
   * [LEAST COMMON GENOMINATOR](<Google CTF 2023/LEAST COMMON GENOMINATOR/README.md>)
 * [Hack The Boo 2023](<Hack The Boo 2023/README.md>)
   * [Practice](<Hack The Boo 2023/Practice/README.md>)
-* [Page 1](page-1.md)
