@@ -1,38 +1,43 @@
-# **Cryptohack.org**
+# Elliptic Curve
 
-# **ELLIPTIC CURVE WRITEUP**
+## **Cryptohack.org**
 
-## **Author:**
+## **ELLIPTIC CURVE WRITEUP**
 
-- Pham Quoc Trung
+### **Author:**
 
-## **Used Language:**
+* Pham Quoc Trung
 
-- Python3
+### **Used Language:**
 
-## **Problem Solving:**
-**Lý thuyết**  
-https://nhattruong.blog/2022/03/06/khai-niem-duong-cong-eliptic/  
+* Python3
+
+### **Problem Solving:**
+
+**Lý thuyết**\
+https://nhattruong.blog/2022/03/06/khai-niem-duong-cong-eliptic/\
 https://nhattruong.blog/2022/03/06/chuan-mat-ma-khoa-cong-khai-tren-duong-cong-elliptic-elliptic-curve-cryptography/
 
-**EC Diffie Hellman**  
-Trước tiên ta chọn một  số  nguyên $p$ lớn, với $p$  là số  nguyên tố  (nếu sử  dụng đường cong Elliptic Zp) hoặc $p$ có dạng $2^m$(nếu chọn đường cong GF($2^m$)), và chọn 2 tham số $a$, $b$ tương ứng để tạo thành nhóm $E_p(a,b)$. Ta gọi $G$ là điểm cơ sở của nhóm nếu tồn tại một số nguyên $n$ sao cho $nG$=0. Số nguyên $n$ nhỏ nhất như vậy được gọi là hạng của $G$.
+**EC Diffie Hellman**\
+Trước tiên ta chọn một số nguyên $p$ lớn, với $p$ là số nguyên tố (nếu sử dụng đường cong Elliptic Zp) hoặc $p$ có dạng $2^m$(nếu chọn đường cong GF($2^m$)), và chọn 2 tham số $a$, $b$ tương ứng để tạo thành nhóm $E\_p(a,b)$. Ta gọi $G$ là điểm cơ sở của nhóm nếu tồn tại một số nguyên $n$ sao cho $nG$=0. Số nguyên $n$ nhỏ nhất như vậy được gọi là hạng của $G$.
 
-Trong trao đổi khóa EC Diffie-Hellman, ta chọn một điểm $G$  có hạng  $n$  lớn, và giao thức trao đổi khóa giữa Alice và Bob tiến hành như sau:
+Trong trao đổi khóa EC Diffie-Hellman, ta chọn một điểm $G$ có hạng $n$ lớn, và giao thức trao đổi khóa giữa Alice và Bob tiến hành như sau:
 
-1)  Alice chọn một số $n_A$ < $n$ và giữ  bí mật số $n_A$ này. Sau đó trong $E_p(a,b)$ Alice tính $Q_A$ = $n_AG$ và gửi cho Bob.
-2)  Tương tự Bob chọn một số bí mật $n_B$, tính  $Q_B$ và gửi $Q_B$  cho Alice.
-3)  Alice tạo khóa phiên bí mật là  $S$ = $n_A Q_B$ =$n_An_BG$
-4)  Bob  tạo  khóa  phiên  bí  mật  là  $S$ =   $n_B Q_A$ = $n_An_BG$ (nhóm  Abel  có tính giao hoán) giống với khóa của Alice.
+1. Alice chọn một số $n\_A$ < $n$ và giữ bí mật số $n\_A$ này. Sau đó trong $E\_p(a,b)$ Alice tính $Q\_A$ = $n\_AG$ và gửi cho Bob.
+2. Tương tự Bob chọn một số bí mật $n\_B$, tính $Q\_B$ và gửi $Q\_B$ cho Alice.
+3. Alice tạo khóa phiên bí mật là $S$ = $n\_A Q\_B$ =$n\_An\_BG$
+4. Bob tạo khóa phiên bí mật là $S$ = $n\_B Q\_A$ = $n\_An\_BG$ (nhóm Abel có tính giao hoán) giống với khóa của Alice.
 
-Trudy có thể chặn được $Q_A$ và $Q_B$, tuy nhiên chỉ có thể tính được điều này là bất khả thi như ta đã thấy ở phần trên.
+Trudy có thể chặn được $Q\_A$ và $Q\_B$, tuy nhiên chỉ có thể tính được điều này là bất khả thi như ta đã thấy ở phần trên.
 
 Chú ý: khóa phiên $S$ là một điểm trong đường cong Elliptic, để sử dụng khóa này cho mã hóa đối xứng như DES hay AES, ta cần chuyển $S$ về dạng số thường.
 
-### Smooth Criminal
+#### Smooth Criminal
+
 Spent my morning reading up on ECC and now I'm ready to start encrypting my messages. Sent a flag to Bob today, but you'll never read it.
 
-Attachments: *source.py*
+Attachments: _source.py_
+
 ```python
 from Crypto.Cipher import AES
 from Crypto.Util.number import inverse
@@ -150,22 +155,27 @@ shared_secret = gen_shared_secret(B, n)
 ciphertext = encrypt_flag(shared_secret)
 print(ciphertext)
 ```
-*output.txt*
+
+_output.txt_
+
 ```
 Point(x=280810182131414898730378982766101210916, y=291506490768054478159835604632710368904)
 
 {'iv': '07e2628b590095a5e332d397b8a59aa7', 'encrypted_flag': '8220b7c47b36777a737f5ef9caa2814cf20c1c1ef496ec21a9b4833da24a008d0870d3ac3a6ad80065c138a2ed6136af'}
 ```
+
 Ở đây, bậc của generator là smooth, nên chúng ta có thể tính được logarit rời rạc của mọi điểm trên đường cong sử dụng Pohlig-Hellman.
 
 Pohlig-Hellman:
-- Suppose we're solving the equation n*P = Q where P and Q are points on a elliptic curve
-- Since the curve is modular, there are only so many values that n*P can take on before getting wrapped around. Let's call the total number of these values ord(P).
-- Using an algorithm called Pollard's Rho, the time it takes to compute the ECDLP will be on the order of sqrt(ord(P))
-- Say ord(P) has prime factors p1, p2, ... pn. The Pohlig Hellman algorithm lets us break the big ECDLP into a bunch of smaller ECDLP's with orders of p1, p2, ... pn. The answers to each of these mini-ECDLP's are then combined using the Chinese Remainder Theorem to give us n.
-- Since the running time of this algorithm is on the order of sqrt(p1) + sqrt(p2) + ... + sqrt(pn), this is a lot faster if ord(P) can be factored into small primes
+
+* Suppose we're solving the equation n\*P = Q where P and Q are points on a elliptic curve
+* Since the curve is modular, there are only so many values that n\*P can take on before getting wrapped around. Let's call the total number of these values ord(P).
+* Using an algorithm called Pollard's Rho, the time it takes to compute the ECDLP will be on the order of sqrt(ord(P))
+* Say ord(P) has prime factors p1, p2, ... pn. The Pohlig Hellman algorithm lets us break the big ECDLP into a bunch of smaller ECDLP's with orders of p1, p2, ... pn. The answers to each of these mini-ECDLP's are then combined using the Chinese Remainder Theorem to give us n.
+* Since the running time of this algorithm is on the order of sqrt(p1) + sqrt(p2) + ... + sqrt(pn), this is a lot faster if ord(P) can be factored into small primes
 
 Dựa trên lý thuyết trên, có thể viết lại thuật toán này như sau:
+
 ```python
 def PolligHellman(P,Q):
 	zList = list()
@@ -186,9 +196,11 @@ def PolligHellman(P,Q):
 		conjList[-1] = conjList[-1] + zList[i]*(facTuple[0]^i)
 	return crt(conjList,rootList)
 ```
+
 (Tham khảo paper `Weak Curves In Elliptic Curve Cryptography`)
 
-Tuy nhiên, với sagemath, thực ra hàm discrete_log trong EllipticCurve đã sử dụng Pohlig-Hellman. Vì vậy, với những bài như này mình có thể sử dụng trực tiếp luôn
+Tuy nhiên, với sagemath, thực ra hàm discrete\_log trong EllipticCurve đã sử dụng Pohlig-Hellman. Vì vậy, với những bài như này mình có thể sử dụng trực tiếp luôn
+
 ```python
 from sage.all import *
 from Crypto.Cipher import AES
@@ -244,14 +256,16 @@ print(decrypt_flag(shared_secret, iv, ciphertext))
 
 ```
 
-Flag: *crypto{n07_4ll_curv3s_4r3_s4f3_curv3s}*
+Flag: _crypto{n07\_4ll\_curv3s\_4r3\_s4f3\_curv3s}_
 
-### Curveball
+#### Curveball
+
 Here's my secure search engine, which will only search for hosts it has in its trusted certificate cache.
 
 Connect at `socket.cryptohack.org 13382`
 
-Attachment: *13382.py*
+Attachment: _13382.py_
+
 ```python
 #!/usr/bin/env python3
 
@@ -333,20 +347,23 @@ class Challenge():
 listener.start_server(port=13382)
 
 ```
+
 Đường cong Elliptic P-256: https://neuromancer.sk/std/nist/P-256
 
 Chương trình sẽ bắt chúng ta truyền vào JSON bao gồm các trường `host`, `private_key`, `curve` và `generator`. Chúng ta được biết các thông tin công khai của 3 domain trong đó có `public_key`. Khi chúng ta truyền input, `public_key` sẽ được tính bằng cách nhân `private_key` với `generator`, nếu trùng với `public_key` của domain `www.bing.com` thì sẽ trả về FLAG. Vậy thì chúng ta chỉ cần tìm ra `private_key` của nó là có thể có được FLAG. Tuy nhiên vì đây là Đường cong Elliptic P-256, việc sử dụng logarit rời rạc dường như là bất khả thi. Vậy phải làm như nào?
 
-Vì đề bài là "CurveBall", chúng ta có thể liên tưởng tới một lỗ hổng có tên y hệt, và nó là CVE-2020-0601. Lỗ hổng này xảy ra ở khi ta được truyền vào phần tử sinh G và nó không được check xem có giống với phần tử sinh gốc của hệ thống sử dụng Elliptic Curve (Và hệ thống của chúng ta cũng đang như vậy). Khi đó, attacker có thể truyền vào $d'$ = $1$ và $G'$ = $Q$. Điều này làm attacker dễ dàng bypass khâu check publickey vì nó vẫn sẽ thỏa mãn do $Q'$ = $d'G'$ = $Q$. 
+Vì đề bài là "CurveBall", chúng ta có thể liên tưởng tới một lỗ hổng có tên y hệt, và nó là CVE-2020-0601. Lỗ hổng này xảy ra ở khi ta được truyền vào phần tử sinh G và nó không được check xem có giống với phần tử sinh gốc của hệ thống sử dụng Elliptic Curve (Và hệ thống của chúng ta cũng đang như vậy). Khi đó, attacker có thể truyền vào $d'$ = $1$ và $G'$ = $Q$. Điều này làm attacker dễ dàng bypass khâu check publickey vì nó vẫn sẽ thỏa mãn do $Q'$ = $d'G'$ = $Q$.
 
 Tuy nhiên, có một vấn đề là việc cho $d$ = $1$ đã bị filter. Chúng ta sẽ có một số cách để bypass:
-- Gửi $d$ = $i$ và $Q'$ = $i^{-1}Q$ với $i^{-1}$ = `inverse(i, E.order())`
-- Gửi $d$ = $i^{-1}$ và $Q'$ = $iQ$ với $i^{-1}$ = `inverse(i, E.order())`
-- Gửi $d$ = $x+1$ và $Q'$ = $Q$ với `x = Q.order() + 1`
+
+* Gửi $d$ = $i$ và $Q'$ = $i^{-1}Q$ với $i^{-1}$ = `inverse(i, E.order())`
+* Gửi $d$ = $i^{-1}$ và $Q'$ = $iQ$ với $i^{-1}$ = `inverse(i, E.order())`
+* Gửi $d$ = $x+1$ và $Q'$ = $Q$ với `x = Q.order() + 1`
 
 Giải thích cho cách thứ 3 thì thì Q.order() là số x đầu tiên thỏa mãn`x*Q=0`. Vì vậy, `(x+1)*Q = Q`
 
 Áp dụng vào code, mình ra được flag:
+
 ```python
 from sage.all import *
 from pwn import *
@@ -385,14 +402,16 @@ conn.sendline(payload)
 print(conn.recvline())
 ```
 
-Flag: *crypto{Curveballing_Microsoft_CVE-2020-0601}*
+Flag: _crypto{Curveballing\_Microsoft\_CVE-2020-0601}_
 
-### ProSign 3
+#### ProSign 3
+
 This is my secure timestamp signing server. Only if you can produce a signature for "unlock" can you learn more.
 
 Connect at `socket.cryptohack.org 13381`
 
-Attachment: *13381.py*
+Attachment: _13381.py_
+
 ```python
 #!/usr/bin/env python3
 
@@ -473,14 +492,14 @@ listener.start_server(port=13381)
 
 ```
 
-Có thể thấy, đây là code minh họa cho việc ứng dụng Elliptic Curve vào chữ ký số (ECDSA). 
+Có thể thấy, đây là code minh họa cho việc ứng dụng Elliptic Curve vào chữ ký số (ECDSA).
 
 Các bước khởi tạo chữ ký số trong thuật toán ECDSA bao gồm:
 
 1. Tạo ra cặp khóa công khai và khóa bí mật cho người dùng: Để thực hiện điều này, ta cần tạo ra một đường cong elliptic và một điểm gốc trên đường cong. Sau đó, sử dụng thuật toán Diffie-Hellman, ta tính được khóa công khai và khóa bí mật cho người dùng.
 2. Tạo ra thông điệp cần ký: Đây là thông tin cần được ký và gửi đi.
 3. Tính toán giá trị băm của thông điệp: Sử dụng một hàm băm như SHA-256 hoặc SHA-512, ta tính toán được giá trị băm của thông điệp cần ký.
-4. Tạo chữ ký số: Đầu tiên, ta tạo một số ngẫu nhiên gọi là $k$. Sau đó, tính toán đường cong elliptic $P = k * G$, trong đó G là base point trên đường cong. Tiếp theo, tính toán giá trị $r = xP (mod n),$ trong đó $xP$ là hoành độ của điểm P trên đường cong elliptic và n là order của base point G. Sau đó, tính toán giá trị $s = k^{-1} * (hash + d*r) (mod n)$, trong đó $d$ là khóa bí mật của người ký và hash là giá trị băm của thông điệp cần ký. Cuối cùng, chữ ký số là cặp giá trị $(r,s).$
+4. Tạo chữ ký số: Đầu tiên, ta tạo một số ngẫu nhiên gọi là $k$. Sau đó, tính toán đường cong elliptic $P = k \* G$, trong đó G là base point trên đường cong. Tiếp theo, tính toán giá trị $r = xP (mod n),$ trong đó $xP$ là hoành độ của điểm P trên đường cong elliptic và n là order của base point G. Sau đó, tính toán giá trị $s = k^{-1} \* (hash + d\*r) (mod n)$, trong đó $d$ là khóa bí mật của người ký và hash là giá trị băm của thông điệp cần ký. Cuối cùng, chữ ký số là cặp giá trị $(r,s).$
 5. Gửi thông điệp và chữ ký số đến người nhận.
 
 Sau khi nhận được thông điệp và chữ ký số, người nhận sẽ thực hiện quá trình xác thực để kiểm tra tính hợp lệ của chữ ký số.
@@ -491,13 +510,14 @@ Quá trình xác nhận (verification) chữ ký số trong ECDSA bao gồm các
 2. Tính băm SHA-1 hoặc SHA-256 của thông điệp gốc M, đây là giá trị h.
 3. Tính $w = s^{-1} mod n$, với n là order của base point G trên đường cong elliptic, tương ứng với khóa cá nhân của người ký ECDSA.
 4. Tính $u1 = hash.w mod n$ và $u2 = r.w mod n.$
-5. Tính điểm $W = u1*G + u2*Q$ trên đường cong elliptic. Nếu W = O (điểm vô cùng), thì chữ ký số không hợp lệ.
+5. Tính điểm $W = u1_G + u2_Q$ trên đường cong elliptic. Nếu W = O (điểm vô cùng), thì chữ ký số không hợp lệ.
 6. Tính $r' = x(W) mod n$. Nếu $r'$ khác với giá trị $r$ được gửi kèm theo thì chữ ký số không hợp lệ.
 7. Nếu $r'$ bằng với giá trị $r$ được gửi kèm theo, thì chữ ký số là hợp lệ. Ngược lại, nếu $r'$ khác với $r$ thì chữ ký số không hợp lệ.
 
 Quá trình xác nhận chữ ký số trong ECDSA sẽ giúp cho người nhận thông điệp có thể đảm bảo rằng thông điệp đó được gửi từ người ký đã được xác thực và không bị sửa đổi trên đường truyền.
 
 Quay lại với challenge của chúng ta, có lỗ hổng xảy ra khi chúng ta chọn số ngẫu nhiên $k$:
+
 ```python
 def sign_time(self):
         now = datetime.now()
@@ -508,9 +528,11 @@ def sign_time(self):
         sig = self.privkey.sign(bytes_to_long(hsh), randrange(1, n))
         return {"msg": msg, "r": hex(sig.r), "s": hex(sig.s)}
 ```
-Có thể thấy, số $k$ được lấy ngẫu nhiên trong khoảng từ 1 tới n. Đáng nói ở đây là ở dòng 2 ta có `n = int(now.strftime("%S"))` vì vậy n đã không còn là `g.order()` nữa mà là một số khá nhỏ, chỉ nằm trong khoảng 1 tới 59. Để ý thêm, $s = k^{-1} * (hash + d*r) (mod n)$. Ta có thể gọi `sign_time` để lấy được `hash`, `r`, `s` và bruteforce `k` để tính ngược lại `d`, hay `secret`. Khi đã có `secret`, ta hoàn toàn có thể tạo ra chữ ký số của riêng mình và gửi lên server.
+
+Có thể thấy, số $k$ được lấy ngẫu nhiên trong khoảng từ 1 tới n. Đáng nói ở đây là ở dòng 2 ta có `n = int(now.strftime("%S"))` vì vậy n đã không còn là `g.order()` nữa mà là một số khá nhỏ, chỉ nằm trong khoảng 1 tới 59. Để ý thêm, $s = k^{-1} \* (hash + d\*r) (mod n)$. Ta có thể gọi `sign_time` để lấy được `hash`, `r`, `s` và bruteforce `k` để tính ngược lại `d`, hay `secret`. Khi đã có `secret`, ta hoàn toàn có thể tạo ra chữ ký số của riêng mình và gửi lên server.
 
 Dưới đây là code khai thác:
+
 ```python
 from pwn import *
 import json
@@ -565,4 +587,4 @@ for k in range(1,60):
     print(conn.recvline())
 ```
 
-Flag: *crypto{ECDSA_700_345y_70_5cr3wup}*
+Flag: _crypto{ECDSA\_700\_345y\_70\_5cr3wup}_

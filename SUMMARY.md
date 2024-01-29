@@ -31,5 +31,4 @@
   * [LEAST COMMON GENOMINATOR](<Google CTF 2023/LEAST COMMON GENOMINATOR/README.md>)
 * [Hack The Boo 2023](<Hack The Boo 2023/README.md>)
   * [Practice](<Hack The Boo 2023/Practice/README.md>)
-* [PortSwigger](PortSwigger/README.md)
-  * [SQL injection](<PortSwigger/SQL injection/README.md>)
+* [TetCTF 2024](tetctf-2024.md)
