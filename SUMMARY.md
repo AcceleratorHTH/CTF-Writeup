@@ -32,4 +32,4 @@
 * [Hack The Boo 2023](<Hack The Boo 2023/README.md>)
   * [Practice](<Hack The Boo 2023/Practice/README.md>)
 * [TetCTF 2024](<TetCTF 2024/README.md>)
-* [PicoCTF](picoctf.md)
+* [PicoCTF Web](<PicoCTF/Web/README.md>)
