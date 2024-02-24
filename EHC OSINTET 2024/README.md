@@ -239,4 +239,4 @@ FLAG: `EHC{H4pPy_N3w_Y3ar_FROMEHCWITHLOVE_2017}`
 
 
 
-**© 2023,Pham Quoc Trung. All rights reserved.**
+**© 2024,Pham Quoc Trung. All rights reserved.**
