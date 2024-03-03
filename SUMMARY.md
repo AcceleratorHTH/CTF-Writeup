@@ -34,3 +34,4 @@
 * [TetCTF 2024](<TetCTF 2024/README.md>)
 * [PicoCTF Web](<PicoCTF/Web/README.md>)
 * [EHC OSINTET 2024](<EHC OSINTET 2024/README.md>)
+* [Vishwactf 2024](<Vishwactf 2024/README.md>)
