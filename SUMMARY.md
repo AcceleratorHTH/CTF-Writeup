@@ -33,3 +33,4 @@
   * [Practice](<Hack The Boo 2023/Practice/README.md>)
 * [TetCTF 2024](<TetCTF 2024/README.md>)
 * [PicoCTF Web](<PicoCTF/Web/README.md>)
+* [EHC OSINTET 2024](<EHC OSINTET 2024/README.md>)
