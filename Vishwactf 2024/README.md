@@ -4,15 +4,15 @@
 
 ## **CRYPTOGRAPHY WRITEUP**
 
-### **Author:**
+## **Author:**
 
 * Pham Quoc Trung
 
-### **Used Language:**
+## **Used Language:**
 
 * Python3
 
-### **Problem Solving:**
+## **Problem Solving:**
 
 ### Happy Valentine's Day
 
