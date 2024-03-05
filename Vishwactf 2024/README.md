@@ -85,7 +85,306 @@ PS: The Guild started from the sands of Deshret then travelled through the fores
 
 #### Solution:
 
-Wait for contest alive
+Đây là giao diện của trang web challenge:
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+Đến tận bây giờ thì mình cũng chưa biết đống này là cái của khỉ gì. Cách mình giải được bài này là bằng cách nhìn vào code front-end
+
+```markup
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teyvat Tales</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <section class="fours first-four centered-align">
+            <div class="img-div">
+                <img src="img/1.jpg" alt="">
+            </div>
+            <div class="form-div">
+                <input type="text" name="input1" id="input1" placeholder="Enter decoded text">
+                <button id="submit-btn-1">Submit</button>
+            </div>
+        </section>
+
+
+        <section class="fours sec-four centered-align">
+            <div class="img-div">
+                <img src="img/2.jpg" alt="">
+            </div>
+            <div class="form-div">
+                <input type="text" name="input2" id="input2" placeholder="Enter decoded text">
+                <button id="submit-btn-2">Submit</button>
+            </div>
+        </section>
+
+
+        <section class="fours third-four centered-align">
+            <div class="img-div">
+                <img src="img/3a.jpg" alt="">
+                <img src="img/3b.jpg" alt="">
+                <img src="img/3c.jpg" alt="">
+            </div>
+            <div class="form-div">
+                <input type="text" name="input3" id="input3" placeholder="Enter decoded text">
+                <button id="submit-btn-3">Submit</button>
+            </div>
+        </section>
+
+
+        <section class="fours fourth-four centered-align">
+            <div class="img-div">
+                <img src="img/4.jpg" alt="">
+            </div>
+            <div class="form-div">
+                <input type="text" name="input4" id="input4" placeholder="Enter decoded text">
+                <button id="submit-btn-4">Submit</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+Ở đây mình thấy một file `script.js` ở cuối. Đây là đoạn code của nó
+
+```javascript
+const submitBtn1 = document.getElementById("submit-btn-1");
+const firstFour = document.querySelector(".first-four");
+
+const submitBtn2 = document.getElementById("submit-btn-2");
+const secFour = document.querySelector(".sec-four");
+
+const submitBtn3 = document.getElementById("submit-btn-3");
+const thirdFour = document.querySelector(".third-four");
+
+const submitBtn4 = document.getElementById("submit-btn-4");
+const fourthFour = document.querySelector(".fourth-four");
+
+
+submitBtn1.addEventListener("click", ()=> {
+    const inputText1 = document.getElementById("input1").value.trim();
+
+    if (inputText1.toLowerCase() === "enigma m3") {
+        firstFour.classList.remove("centered-align");
+        firstFour.classList.add("hidden");
+    }
+    else{
+        alert("Incorrect deciphering! Try again!")
+    }
+});
+
+submitBtn2.addEventListener("click", ()=> {
+    const inputText2 = document.getElementById("input2").value.trim();
+
+    if (inputText2.toLowerCase() === "ukw c") {
+        secFour.classList.remove("centered-align");
+        secFour.classList.add("hidden");
+    }
+    else{
+        alert("Incorrect deciphering! Try again!")
+    }
+});
+
+submitBtn3.addEventListener("click", ()=> {
+    const inputText3 = document.getElementById("input3").value.trim();
+
+    if (inputText3.toLowerCase() === "rotor1 i p m rotor2 iv a o rotor3 vi i n") {
+        thirdFour.classList.remove("centered-align");
+        thirdFour.classList.add("hidden");
+    }
+    else{
+        alert("Incorrect deciphering! Try again!")
+    }
+});
+
+submitBtn4.addEventListener("click", ()=> {
+    const inputText4 = document.getElementById("input4").value.trim();
+
+    if (inputText4.toLowerCase() === "vi sh wa ct fx") {
+        fourthFour.classList.remove("centered-align");
+        fourthFour.classList.add("hidden");        
+    }
+    else{
+        alert("Incorrect deciphering! Try again!")
+    }
+});
+```
+
+Từ đây thì mình có được luôn 4 đáp án cho 4 ảnh lần lượt là:
+
+```
+enigma m3
+ukw c
+rotor1 i p m rotor2 iv a o rotor3 vi i n
+vi sh wa ct fx
+```
+
+Sau khi điền từng kết quả vào thì mình ra được ảnh sau (thứ mà mình cũng đã thấy trước ở trong `style.css` với `url(img/GenshinNoticeBoard.png);`)
+
+<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+Mình thu được đoạn flag bị mã hóa là `CYNIPJ_RE_LSKR-YAZN_MBSJ`. Ban đầu, mình không tìm ra được nó là thể loại mã hóa gì. Tuy nhiên, sau khi nhìn vào đống đáp án mà mình phải điền trước đó, mình thử search enigma m3 và mình tìm thấy một loại mã hóa có các tham số như trong đáp án.&#x20;
+
+<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+
+Sau khi chỉnh các tham số đó cho y hệt như các đáp án trước đó, mình đã ra được flag.
+
+Flag: _Vishwactf{beware\_of\_tone-deaf\_bard}_
+
+### Poly Fun
+
+#### Description:
+
+Its a simple symmetric key encryption, I am sure you will be able to solve it (what do you mean the key looks weird)
+
+**Author : Revak Pandkar**
+
+#### **Attachments:**
+
+_challenge.py_
+
+```python
+import numpy as np
+import random
+
+polyc = [4,3,7]
+poly = np.poly1d(polyc)
+
+
+def generate_random_number():
+    while True:
+        num = random.randint(100, 999)
+        first_digit = num // 100
+        last_digit = num % 10
+        if abs(first_digit - last_digit) > 1:
+            return num
+
+
+def generate_random_number_again():
+    while True:
+        num = random.randint(1000, 9999)
+        if num % 1111 != 0:
+            return num
+
+
+def transform(num):
+    number = random.randint(1, 100000)
+    org = number
+    number *= 2
+    number += 15
+    number *= 3
+    number += 33
+    number /= 6
+    number -= org
+    if number == 13:
+        num1 = random.randint(1, 6)
+        num2 = random.randint(1, 6)
+        number = num1 * 2
+        number += 5
+        number *= 5
+        number += num2
+        number -= 25
+        if int(number / 10) == num1 and number % 10 == num2:
+            number = generate_random_number()
+            num1 = int(''.join(sorted(str(number), reverse=True)))
+            num2 = int(''.join(sorted(str(number))))
+            diff = abs(num1 - num2)
+            rev_diff = int(str(diff)[::-1])
+            number = diff + rev_diff
+            if number == 1088:
+                org = num
+                num *= 2
+                num /= 3
+                num += 5
+                num *= 4
+                num -= 9
+                num -= org
+                return num
+            else:
+                number = generate_random_number_again()
+                i = 0
+                while number != 6174:
+                    digits = [int(d) for d in str(number)]
+                    digits.sort()
+                    smallest = int(''.join(map(str, digits)))
+                    digits.reverse()
+                    largest = int(''.join(map(str, digits)))
+                    number = largest - smallest
+                    i += 1
+
+                if i <= 7:
+                    org = num
+                    num *= 2
+                    num += 7
+                    num += 5
+                    num -= 12
+                    num -= org
+                    num += 4
+                    num *= 2
+                    num -= 8
+                    num -= org
+                    return num
+                else:
+                    org = num
+                    num **= 4
+                    num /= 9
+                    num += 55
+                    num *= 6
+                    num += 5
+                    num -= 23
+                    num -= org
+                    return num
+        else:
+            org = num
+            num *= 10
+            num += 12
+            num **= 3
+            num -= 6
+            num += 5
+            num -= org
+            return num
+    else:
+        org = num
+        num += 5
+        num -= 10
+        num *= 2
+        num += 12
+        num -= 20
+        num -= org
+        return num
+
+
+def encrypt(p,key):
+    return ''.join(chr(p(transform(i))) for i in key)
+
+
+key = open('key.txt', 'rb').read()
+enc = encrypt(poly,key)
+print(enc)
+```
+
+_encoded\_flag.txt_
+
+```
+u5FUKxDUxH9y8yxvfaaU+GSXDwvJS6QxlN/3udOEzpU6fIVUExjDLsB3LKqUTz/x
+```
+
+_encoded\_key.txt_
+
+{% file src="../.gitbook/assets/encoded_key.txt" %}
+
+#### Solution:
+
+\<Updating>
 
 ### Lets smother the King!
 
@@ -1943,3 +2242,73 @@ int main()
 
 Flag: _VishwaCTF{BIT5\_3NCRYPT3D\_D3CRYPTED\_M1ND5\_D33PLY\_TE5T3D}_
 
+### The Naughty Friend
+
+#### Description:
+
+One of my friends Dhruv is a cryptography genius, but he likes to annoy me by playing pranks with my passwords. He recently changed my accounts password and has given the following files as hints, he also gave this buggy code which had some import statements removed, help me retrieve my lost password!!!
+
+**Author : Kanishk Kumar**
+
+#### **Attachments:**
+
+_Code.txt_
+
+```
+There are some things missing here but I can assure you there are no changes in the encryption
+Code:
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+
+import java.util.Scanner;
+
+public class BuggedBlowfish {
+    public static void main(String[] args) throws Exception {
+        Scanner myObj = new Scanner(System.in);
+        System.out.println("Enter the text to be encrypted: ");
+        String plaintext = myObj.nextLine();
+        System.out.println("Enter the key: ")
+        String keyString = myObj.nextLine();
+        byte[] keyData = keyString.getBytes();
+        SecretKey secretKey = new SecretKeySpec(keyData, "Blowfish");
+        String encryptedText = encrypt(plaintext, secretKey);
+        System.out.println("Encrypted Text: " + encryptedText)
+    }
+    
+    private static String encrypt(String plaintext, SecretKey secretKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("Blowfish/CBC/PKCS5Padding");
+        byte[] ivBytes = new byte[cipher.getBlockSize()];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(ivBytes);
+        IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+        byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes());
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+        encryptedBytes = cipher.doFinal(encryptedBytes);
+
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+    
+}
+
+```
+
+_Encryption\&Key.txt_
+
+```
+Encryption:
+mF1b8dUwdPVhc/0Hfu1ONep6V6oTHnRqhEMEgtCsge+GncFq9YbX1eCkYwmrHTvajsiyj/vd4IV0BbZI1Obq3/uD7nDyAJ/FxZJNAFRAUuGm3LLXf4vn3zKWsZATypBkkgEQLWfIpg0tP13wJRhk6JUVPi17AaKHrodTtWOq54FqKIaT1DoifMjtJ4TCG3IXmjEo+6ZsBokIjxeCjamGBwNAqFaqIikkHJo7L1PiCFds/lAaB38KqHGL/E2pfw0CK3XYzKV8gBdwhnrUq1UN1Q==
+
+Key:
+*tz tw% u~ $%#p! QE?2EC@A>x ED@| 69E 6C2 5?t 5?2 8?:??:86q 69%Q
+```
+
+#### Solution:
+
+\<Updating>
+
+
+
+**© 2024,Pham Quoc Trung. All rights reserved.**

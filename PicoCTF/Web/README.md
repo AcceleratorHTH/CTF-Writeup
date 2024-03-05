@@ -62,17 +62,17 @@ Do có sẵn chữ trong thẻ input, mình thử nhập cái đó vào thì k�
 
 Khi mình thử nhập bất kì, ví dụ `flag`, kết quả trả về như sau
 
-<figure><img src="../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 Nhìn vào cookies, mình để ý ban đầu nó có giá trị `name = -1`. Tuy nhiên sau khi gửi `snickerdoodle`, nó đã được set thành 0
 
-<figure><img src="../../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 Mình thử thay bằng 1, và mình thấy được 1 loại cookie khác
 
-<figure><img src="../../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
 Khả năng sẽ còn nhiều loại cookie khác nên mình sẽ sử dụng Intruder để thử các trường hợp và grep flag
 
