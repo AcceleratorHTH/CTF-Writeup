@@ -35,3 +35,4 @@
 * [PicoCTF Web](<PicoCTF/Web/README.md>)
 * [EHC OSINTET 2024](<EHC OSINTET 2024/README.md>)
 * [Vishwactf 2024](<Vishwactf 2024/README.md>)
+* [Cyber Apocalypse 2024 Hacker Royale](<Cyber Apocalypse 2024 Hacker Royale/README.md>)
