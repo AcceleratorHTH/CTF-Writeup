@@ -38,3 +38,5 @@
 * [Cyber Apocalypse 2024 Hacker Royale](<Cyber Apocalypse 2024 Hacker Royale/README.md>)
 * [Squ1rrel CTF 2024](<Squ1rrel CTF 2024/README.md>)
 * [NahamCon CTF 2024](<NahamCon CTF 2024/README.md>)
+* [angstromCTF 2024](<angstromCTF 2024/README.md>)
+* [N0PSctf 2024](<N0PSctf 2024/README.md>)
