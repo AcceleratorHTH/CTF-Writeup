@@ -4,15 +4,15 @@
 
 ## **CRYPTOGRAPHY WRITEUP**
 
-### **Author:**
+## **Author:**
 
 * Pham Quoc Trung
 
-### **Used Language:**
+## **Used Language:**
 
 * Python3
 
-### **Problem Solving:**
+## **Problem Solving:**
 
 > Thật ra, cả 2 bài này đều có thể giải dễ dàng bằng GPT. Thậm chí mình đã không cần phải hiểu đề. Cơ mà mình vẫn muốn thử thách xem liệu mình có tự làm được không nên write-up này đã ra đời.
 
