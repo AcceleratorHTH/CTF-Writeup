@@ -682,3 +682,5 @@ Hint: This is a math challenge
 Dự định là bài này sẽ là bài hay nhất :v Cơ mà khi đọc writeup thì mình thấy chán do không có kỹ thuật gì nên mình sẽ để wu ở đây
 
 {% embed url="https://nightxade.github.io/ctf-writeups/writeups/2024/squ1rrel-CTF-2024/crypto/squ1rrel-lottery.html" %}
+
+**© 2024,Pham Quoc Trung. All rights reserved.**
