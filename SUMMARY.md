@@ -40,3 +40,4 @@
 * [NahamCon CTF 2024](<NahamCon CTF 2024/README.md>)
 * [angstromCTF 2024](<angstromCTF 2024/README.md>)
 * [N0PSctf 2024](<N0PSctf 2024/README.md>)
+* [FPTU SecAthon 2024](<FPTU SecAthon 2024/README.md>)
