@@ -1,26 +1,29 @@
-# **Cookie\_Arena\_CTF\_2023**
+# Cookie Arena CTF 2023
 
-# **CRYPTOGRAPHY WRITEUP**
+## **Cookie\_Arena\_CTF\_2023**
+
+## **CRYPTOGRAPHY WRITEUP**
 
 ## **Author:**
 
-- Pham Quoc Trung
+* Pham Quoc Trung
 
 ## **Used Language:**
 
-- Python3
+* Python3
 
 ## **Problem Solving:**
+
 ![image](https://github.com/AcceleratorHTH/CTF-Writeup/assets/86862725/e3cfe1dc-7ae4-42b5-9f19-46e6f14570dc)
 
-
 ### Basic Operator
+
 Sử dụng kiến thức toán học và cấu trúc đại số để giải mã flag\
 **Format FLAG: CHH{XXX}**
 
-Attachment:
-chal.py
-```python3
+Attachment: chal.py
+
+```python
 from Crypto.Util import number
 
 def padding_pkcs7(data,block_size=4):
@@ -56,23 +59,26 @@ if __name__=='__main__':
 	print(cipher_flag)
 
 ```
+
 cipher.txt
+
 ```
 Cipher:
 [752589857254588976778, 854606763225554935934, 102518422244000685572, 779286449062901931327, 424602910997772742508, 1194307203769437983433, 501056821915021871618, 691835640758326884371, 778501969928317687301, 1260460302610253211574, 833211399330573153864, 223847974292916916557]
 ```
 
-Ở bài này, mình thấy flag được mã hóa thông qua nhiều funtion. Ý tưởng đơn giản là mình sẽ viết ngược lại từng hàm và chạy. Theo thứ tự trong hàm *ecb_mode* thì mình sẽ dịch ngược *pow_func, exp_func, xor_shift_right_func, mul_func, plus_func, split_block* và *padding_pkcs7.*
+Ở bài này, mình thấy flag được mã hóa thông qua nhiều funtion. Ý tưởng đơn giản là mình sẽ viết ngược lại từng hàm và chạy. Theo thứ tự trong hàm _ecb\_mode_ thì mình sẽ dịch ngược _pow\_func, exp\_func, xor\_shift\_right\_func, mul\_func, plus\_func, split\_block_ và _padding\_pkcs7._
 
-Đầu tiên là *pow_func*:
-```python3
+Đầu tiên là _pow\_func_:
+
+```python
 def pow_func(data,e,p):
 	return pow(data,e,p)
 ```
 
-Ở đây thì new_data = data^e (mod p). Để có thể tính lại được data thì thoạt nhìn, nó có vẻ là một bài toán khó. Tuy nhiên, để ý trong đoạn code thì e = 2 nên new_data = data^2 (mod p), hay data^2 ≡ new_data (mod p). Vấn đề này có thể được giải quyết thông qua thuật toán Cipolla's hoặc Tonelli-shanks. Ở đây, mình sử dụng sagemath để thực hiện nó.
+Ở đây thì new\_data = data^e (mod p). Để có thể tính lại được data thì thoạt nhìn, nó có vẻ là một bài toán khó. Tuy nhiên, để ý trong đoạn code thì e = 2 nên new\_data = data^2 (mod p), hay data^2 ≡ new\_data (mod p). Vấn đề này có thể được giải quyết thông qua thuật toán Cipolla's hoặc Tonelli-shanks. Ở đây, mình sử dụng sagemath để thực hiện nó.
 
-```python3
+```python
 def rev_pow_func(data,e,p):
     Zn = Zmod(p)
     return  Zn(data).sqrt(all=True)
@@ -87,16 +93,19 @@ for x in data:
 print(data1a)
 print(data1b)
 ```
-Mình dùng sqrt(all=True) để có thể liệt kê đủ nghiệm cần tìm. Nếu các bạn dùng nth_root(2), các bạn sẽ cần dùng p trừ đi kết quả thu được để lấy được nghiệm còn lại.
 
-Tiếp theo là tới hàm *exp_func*:
-```python3
+Mình dùng sqrt(all=True) để có thể liệt kê đủ nghiệm cần tìm. Nếu các bạn dùng nth\_root(2), các bạn sẽ cần dùng p trừ đi kết quả thu được để lấy được nghiệm còn lại.
+
+Tiếp theo là tới hàm _exp\_func_:
+
+```python
 def exp_func(data,base,p):
 	return pow(base,data,p)
 ```
 
-Khác với hàm trước, ở đây new_data = base ^ data (mod p), hay base^data ≡ new_data (mod p). Đây là bài toán về logarit rời rạc. Mình sẽ dùng luôn hàm của sagemath.
-```python3
+Khác với hàm trước, ở đây new\_data = base ^ data (mod p), hay base^data ≡ new\_data (mod p). Đây là bài toán về logarit rời rạc. Mình sẽ dùng luôn hàm của sagemath.
+
+```python
 def rev_exp_func(data,e,p):
     G = Integers(p)
     return G(data).log(G(e))
@@ -114,19 +123,23 @@ print(data2b)
 ```
 
 Ở đây mình có thể thấy được 1 số số mà chắc chắn không phải đáp án cho flag. Các bạn chạy thử code sẽ thấy rõ. Mình viết một đoạn code nhỏ để tạo nên một mảng đúng duy nhất:
-```python3
+
+```python
 def generate_array(a, b):
     return [b[i] if a[i] > 670000000000000000000 and b[i] < 670000000000000000000 else a[i] for i in range(min(len(a), len(b)))]
 
 data2 = generate_array(data2a,data2b)
 print(data2)
 ```
-Giờ thì không phải thao tác trên 2 mảng nữa. Giờ đến lượt hàm *xor_shift_right_func*:
-```python3
+
+Giờ thì không phải thao tác trên 2 mảng nữa. Giờ đến lượt hàm _xor\_shift\_right\_func_:
+
+```python
 def xor_shift_right_func(data,bit_loc):
 	return (data^(data>>bit_loc))&0xffffffff
 ```
-Ở đây thì bit_loc == 1. Đầu tiên, data được dịch sang phải 1 bit, sau đó XOR với data gốc. Kết quả được AND với 0xffffffff. 0xffffffff là một hằng số hexa, tương đương với một số nguyên 32 bit với tất cả các bit đều là 1. Phép AND này đảm bảo rằng kết quả cuối cùng sẽ nằm trong phạm vi 32 bit.
+
+Ở đây thì bit\_loc == 1. Đầu tiên, data được dịch sang phải 1 bit, sau đó XOR với data gốc. Kết quả được AND với 0xffffffff. 0xffffffff là một hằng số hexa, tương đương với một số nguyên 32 bit với tất cả các bit đều là 1. Phép AND này đảm bảo rằng kết quả cuối cùng sẽ nằm trong phạm vi 32 bit.
 
 Khi data >> 1, bit đầu của data bây giờ sẽ là 0. Khi đó, ta chỉ cần lấy bit tại cùng vị trí của kết quả XOR với 0, sẽ ra được bit đầu của data gốc. Để dễ hiểu hơn thì:
 
@@ -134,12 +147,13 @@ Giả sử data = **1011010**\
 và data >> 1 = 0**101101** (số 0 được thêm vào cho phép dịch)\
 XOR:\
 **1011010**\
-0**101101** \
+0**101101**\
 1110111
 
-Vậy thì ở đây, ta chỉ cần cho bit đầu của kết quả XOR với 0 sẽ ra bit đầu của data. Lấy bit đầu đó XOR với bit thứ 2 của new_data, sẽ ra được bit 2 của data gốc. Cứ như thế sẽ ra được data gốc.\
-Ý tưởng ở đây sẽ là tạo ra mảng chứa 1 bit 0 trước, lấy bit 0 đó XOR với bit đầu của new_data. Ra kết quả bao nhiêu sẽ add lại vào mảng trên để XOR tiếp với bit thứ 2 của new_data. Cứ như thế sau khi XOR hết, xóa số 0 ban đầu của mảng đi, ta sẽ được data gốc.
-```python3
+Vậy thì ở đây, ta chỉ cần cho bit đầu của kết quả XOR với 0 sẽ ra bit đầu của data. Lấy bit đầu đó XOR với bit thứ 2 của new\_data, sẽ ra được bit 2 của data gốc. Cứ như thế sẽ ra được data gốc.\
+Ý tưởng ở đây sẽ là tạo ra mảng chứa 1 bit 0 trước, lấy bit 0 đó XOR với bit đầu của new\_data. Ra kết quả bao nhiêu sẽ add lại vào mảng trên để XOR tiếp với bit thứ 2 của new\_data. Cứ như thế sau khi XOR hết, xóa số 0 ban đầu của mảng đi, ta sẽ được data gốc.
+
+```python
 def rev_xor_shift_right_func(data):
     data = format(data, "032b")
     cal_data = [0]
@@ -154,27 +168,31 @@ for i in data2:
 print(data3)
 ```
 
-Giờ đến *mul_func*:
-```python3
+Giờ đến _mul\_func_:
+
+```python
 def mul_func(data,mul):
 	return (data*mul)&0xffffffff
 ```
 
 Với hàm này, hãy để ý 0xffffffff là số lẻ trong decimal. Từ đó, ta có thể áp dụng công thức:
-```
+
+```python
 a & b = a % (b+1) với b lẻ
 ```
-new_data = (data * mul) % (0xffffffff + 1)\
-hay (data * mul) ≡ new_data % (0xffffffff + 1)
+
+new\_data = (data \* mul) % (0xffffffff + 1)\
+hay (data \* mul) ≡ new\_data % (0xffffffff + 1)
 
 Sử dụng nghịch đảo modun của mul để giải phương trình trên, giải thích cho điều này:
 
-(data * mul) ≡ new_data % (0xffffffff + 1)\
-<=> data * mul * mul^-1 ≡ (new_data * mul^-1) % (0xffffffff + 1)\
-Mà mul * mul^-1 = 1(t/c nghịch đảo modun)\
-<=> data ≡ (new_data * mul^-1) % (0xffffffff + 1)\
+(data \* mul) ≡ new\_data % (0xffffffff + 1)\
+<=> data \* mul \* mul^-1 ≡ (new\_data \* mul^-1) % (0xffffffff + 1)\
+Mà mul \* mul^-1 = 1(t/c nghịch đảo modun)\
+<=> data ≡ (new\_data \* mul^-1) % (0xffffffff + 1)\
 Với data < (0xffffffff + 1), data % (0xffffffff + 1) sẽ bằng data
-```python3
+
+```python
 def rev_mul_func(data, mul):
     return (data * int(gmpy2.invert(mul, 0xffffffff + 1))) & 0xffffffff
 
@@ -184,13 +202,17 @@ for i in data3:
 
 print(data4)
 ```
-Tiếp tục là với hàm *plus_func*:
-```python3
+
+Tiếp tục là với hàm _plus\_func_:
+
+```python
 def plus_func(data,shift):
 	return (data+shift)&0xffffffff
 ```
+
 Này thì đơn giản là phép cộng, chúng ta sẽ trừ đi
-```python3
+
+```python
 def rev_plus_func(data, shift):
     return (data - shift) & 0xffffffff
 
@@ -200,21 +222,27 @@ for i in data4:
 
 print(data5)
 ```
-Đến hàm *split_block*:
-```python3
+
+Đến hàm _split\_block_:
+
+```python
 def split_block(data,block_size):
 	return list(int.from_bytes(data[i:i+block_size],'little') for i in range(0,len(data),block_size))
 ```
+
 Mình sẽ viết hàm để join chúng lại:
-```python3
+
+```python
 def join_blocks(blocks):
     return b''.join(block.to_bytes((block.bit_length() + 7) // 8, 'little') for block in blocks)
 
 data6 = join_blocks(data5)
 print(data6)
 ```
+
 Đến đây thì dường như chúng ta đã ra được flag, mình nghĩ là không cần thiết phải viết hàm để bỏ pad đi lắm. Nhưng nếu các bạn muốn tham khảo thì đây là nó:
-```python3
+
+```python
 def unpadding_pkcs7(padded_data):
     padding_size = padded_data[-1]
     return padded_data[:-padding_size]
@@ -222,21 +250,24 @@ def unpadding_pkcs7(padded_data):
 print(unpadding_pkcs7(data6))
 ```
 
-Flag: CHH{w3lc0m3_70_7h3_m47h_w0rld(1_h4t3_1t_th3r3)}
+Flag: _CHH{w3lc0m3\_70\_7h3\_m47h\_w0rld(1\_h4t3\_1t\_th3r3)}_
 
-À quên, đây là mình trình bày code để các bạn có thể step-by-step các bước. Final code mình sẽ để [ở đây](https://github.com/AcceleratorHTH/CTF-Writeup/blob/main/Cookie%20Arena%20CTF%202023/Source/basicoperator.py) nhé :v
+À quên, đây là mình trình bày code để các bạn có thể step-by-step các bước. Final code mình sẽ để [ở đây](../Cookie%20Arena%20CTF%202023/Source/basicoperator.py) nhé :v
 
 ### Knapsack Ls
+
 Hệ thống mã hóa giựa trên bài toán Knapsack (bài toán xếp ba lô) đã bị coi là lỗi thời, nhưng điều đó không có nghĩa là nó có thể bị phá giải quá dễ dàng. Dựa vào implementation của mã hóa Knapsack trong knapsack.py, giải mã cipher để thu hồi flag.\
 **Format FLAG: CHH{XXX}**
 
-Attachments:
-pub_key.txt
+Attachments: pub\_key.txt
+
 ```
 [43840113305581131795279797789093610869, 25671162443490210031784763050767207532, 6001769265119430614631782649952643356, 73521673497713025029239337461919881111, 86207439010568594314162414481970962317, 47714522703176373455115652188956101728, 39013785450660799339071487833855117053, 99720328779553130323261570624699472274, 56801730014082032103764648702913670605, 56875947939072280053341910569703290481, 6777018736332231356360273109122323983, 64282820255623342830695520268826453473, 21510177863483107761513368858017158458, 88999212996376205373411604716481814294, 21167180433710172715561410769658980338, 53988354426206626048276676648717671789, 82454574554107632872906561271793885103, 34238518652709304551635369779340095136, 5081213770246109310854315030563596017, 35676546839591659980876620994236683080, 61804490028276149551813742275879895343, 47868484398459384397990013507113194128, 79141732458875716511767486956076635010, 89768484644472604982812438158836379513, 108665660470366488973920414914088436457, 42013527007997056247679460159005166736, 59516238668397055079712758172437350204, 12247246885302547631808898114678421540, 68119702452821826703846268698978422087, 46477361269068664125259653428529967798, 104192935540102711457274510496328770849, 39480897318804270587289396967546023715]
 ```
+
 knapsack.py
-```python3
+
+```python
 from Crypto.Util import number
 from Crypto.Util.Padding import pad,unpad
 
@@ -303,16 +334,18 @@ if __name__=='__main__':
 	print(c)
 	print(server)
 ```
+
 cipher.txt
+
 ```
 b'\xe7\x81W\x8eA0\xb0\x92tM\xc9\x06\x07~$\xef\x01\x0c\x16\x8cP\x11l\x81\xe8\xa7\xa3\x0e\xec\x8a~\xe9Z\x02\xb28\x92z^\x16m\xb5\x80o\xf6\xd9\xec@\xc0\x85\x02\xdbvo\x8bB\xb3\xa2\xe4\x00\x01\xc2\xcaL\xdb\x8a\t\x03\xaf\xa528\xc8\xa1\xf6\x05u\xeb\xc0\xcbc\x06\xd8 \x02\xca@E&\xf0d4A\x85\x04\x84p~\xa5\t\xfe\x02\xd9\xa8\xcbp\xb9\xe8\x14\x04\x9a\xb9\x16#\x0b\xb8\x98\x90\x02\x8c\xe2\xf1\x8a\xf1\xe3Z\xe4\xff\xb4"\xeb\x86k\x97\x1b\x02IsN%\xd5\xect\x96\xb3\xe7\xf5Mw\xe6S\xbd\x02\xb7\xc4\xe9\xa6\x019q\xc9\xdd\xaf\xad9bG\xd8\x1e\x02\x18{\xc6q\xbe=\x97&\x18qj\xed\xfd\xb8\x94\xfd\x01'
 ```
+
 Về knapsack và cách giải mã nó, các bạn có thể tham khảo bài viết [này](https://drx.home.blog/2019/02/24/crypto-he-ma-merkle-hellman/) (Cảm ơn tác giả vì đã giải thích khá dễ hiểu)
 
+Mình chạy thử file knapsack.py sau khi uncomment dòng # print((tmp.bit\_length()+7)//8) thì nhận thấy message bị chia thành từng block 4 bytes và từ 4 bytes đó encrypt được cipher dài 17 bytes. Từ đó, mình sẽ chia cipher thành từng block 17 bytes và để ý little endian nên phải đảo ngược.
 
-Mình chạy thử file knapsack.py sau khi uncomment dòng # print((tmp.bit_length()+7)//8) thì nhận thấy message bị chia thành từng block 4 bytes và từ 4 bytes đó encrypt được cipher dài 17 bytes. Từ đó, mình sẽ chia cipher thành từng block 17 bytes và để ý little endian nên phải đảo ngược. 
-
-```python3
+```python
 from Crypto.Util.number import *
 
 cipher = b'\xe7\x81W\x8eA0\xb0\x92tM\xc9\x06\x07~$\xef\x01\x0c\x16\x8cP\x11l\x81\xe8\xa7\xa3\x0e\xec\x8a~\xe9Z\x02\xb28\x92z^\x16m\xb5\x80o\xf6\xd9\xec@\xc0\x85\x02\xdbvo\x8bB\xb3\xa2\xe4\x00\x01\xc2\xcaL\xdb\x8a\t\x03\xaf\xa528\xc8\xa1\xf6\x05u\xeb\xc0\xcbc\x06\xd8 \x02\xca@E&\xf0d4A\x85\x04\x84p~\xa5\t\xfe\x02\xd9\xa8\xcbp\xb9\xe8\x14\x04\x9a\xb9\x16#\x0b\xb8\x98\x90\x02\x8c\xe2\xf1\x8a\xf1\xe3Z\xe4\xff\xb4"\xeb\x86k\x97\x1b\x02IsN%\xd5\xect\x96\xb3\xe7\xf5Mw\xe6S\xbd\x02\xb7\xc4\xe9\xa6\x019q\xc9\xdd\xaf\xad9bG\xd8\x1e\x02\x18{\xc6q\xbe=\x97&\x18qj\xed\xfd\xb8\x94\xfd\x01'
@@ -327,8 +360,10 @@ print(ret)
 
 #ret = [658157336740748078513617478988103909863, 801407625220710617526900261195778627084, 858350295117626581440717262420549187762, 1033531137623151498590666148185839204059, 724221695429542151115546890883063522735, 1018238732058127372071660634048746045642, 872766527203138414179370420050858846425, 717240107460880717639441069017041855116, 932224460090972223441905899076223660873, 721564557670160331780121586296716641463, 677349261871154149350748837802592860952]
 ```
-Giờ thì mình cần một hàm để giải mã knapsack. Ở đây, mình sử dụng code giải bài [Archaic](https://github.com/ctfs/write-ups-2014/tree/master/asis-ctf-quals-2014/archaic) của ASIS CTF quals 2014. Đây là lời giải của chính btc, nên có vẻ khá uy tín. 
-```python3
+
+Giờ thì mình cần một hàm để giải mã knapsack. Ở đây, mình sử dụng code giải bài [Archaic](https://github.com/ctfs/write-ups-2014/tree/master/asis-ctf-quals-2014/archaic) của ASIS CTF quals 2014. Đây là lời giải của chính btc, nên có vẻ khá uy tín.
+
+```python
 #from Crypto.Util.number import *
 from sage.all import *
 
@@ -357,10 +392,12 @@ for x in range(10):
     res = A.LLL()
     print(res)
 ```
+
 Mình sẽ chạy đoạn code trên bằng sage -python, cùng với đó là các pipeline | grep 0 | grep 1 | grep -v "-". Mình làm như vậy để có thể lọc ra được các short-vector ứng với mỗi block cần thiết cho bước giải mã tiếp theo.
 
 Với mỗi short-vector thu được, mình sẽ chuyển nó từ hệ nhị phân little-endian về dạng bytes để đọc được flag
-```python3
+
+```python
 from Crypto.Util.number import long_to_bytes
 
 def binary_array_to_little_endian_bytes(binary_array):
@@ -379,7 +416,8 @@ for bytes_data in little_endian_bytes:
     print(bytes_data)
 ```
 
-Và đây là kết quả mình thu được: 
+Và đây là kết quả mình thu được:
+
 ```
 b'{FTC'
 b'p4nk'
@@ -395,15 +433,15 @@ b'!!!y'
 
 Viết lại bằng tay(mình lười code :v) hoặc dùng code, ta sẽ thu được flag.
 
-Flag: CHH{kn4p54ck_15_br0k3n_th3r3f0r3_e4sy!!!}
-
+Flag: _CHH{kn4p54ck\_15\_br0k3n\_th3r3f0r3\_e4sy!!!}_
 
 ### Rubic Cipher
+
 Flag đã được xáo trộn bằng một thuật toán dựa trên cơ chế xoay khối rubik, tìm hiểu và áp dụng cơ chế này để thu hồi flag\
 **Format FLAG: CHH{XXX}**
 
-Attachments:
-rubik.txt
+Attachments: rubik.txt
+
 ```
 
          | 0  1  2  |
@@ -419,7 +457,9 @@ rubik.txt
            51 52 53		 
 
 ```
-scramble_sequence.txt
+
+scramble\_sequence.txt
+
 ```
 (F, AAAAAAAAABBBCCCDDDEEEBBBCCCDDDEEEBBBCCCDDDEEEFFFFFFFFF) = AAAAAABBBBBFCCCADDEEEBBFCCCADDEEEBBFCCCADDEEEDDDFFFFFF
 
@@ -430,14 +470,18 @@ KEY="D R2 F2 D B2 D2 R2 B2 D L2 D' R D B L2 B' L' R' B' F2 R2 D R2 B2 R2 D L2 D2
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ```
+
 cipher.txt
+
 ```
 b';V".24$9\x0cw`\x02 \x16\x0b9j:2F\x128-x?\x05C\x1b3$\nShX*W\x01,\x025\x01\x0e\x17\x17\x01\x1c>X\x02C=\x00<\x1a0\x18>\x06\x00JE\x1e\x00\x16X\x0b \x0c\x1d\x08\r9\x0b0\x12q\x1fRS7\x0f3\x01tfa)\x07\x0ee3\n(<\x163j\x0b0.Z%%q8j$2'
 ```
-Hãy phân tích một chút về những gì chúng ta được cung cấp. File rubik.txt đã cho mình một mô hình cục rubik ban đầu với những số được đánh trên từng ô của rubik. Ở file scramble_sequence.txt, dòng đầu cho chúng ta biết được trạng thái của rubik sau khi thực hiện xoay "F". Đối với các bạn chơi rubik thì điều này sẽ tương đối dễ hiểu. Đoạn sau có sự xuất hiện của IV và KEY, mình có thể nhận ra dạng mã hóa CBC. Ở đây chúng ta thấy IV dài 54-bytes, nên mình sẽ phải chia cipher text ra từng block 54-bytes. Key cho thuật toán mã hóa trong CBC lần này là một tổ hợp xoay rubik. 
 
-Vậy thì ở đây, điều khó nhất là mình phải dựng được hàm để xoay rubik bằng python. May mắn cho mình, challenge này tương tự như một challenge trong giải rgbCTF 2020 - RubikCBC. Ở trong writeup [này](https://dunsp4rce.github.io/rgbCTF-2020/cryptography/2020/07/14/RubikCBC.html), người viết đã dựng sẵn cho mình hàm *scramble*. Việc cần làm còn lại là chia khối và giải mã theo CBC.
-```python3
+Hãy phân tích một chút về những gì chúng ta được cung cấp. File rubik.txt đã cho mình một mô hình cục rubik ban đầu với những số được đánh trên từng ô của rubik. Ở file scramble\_sequence.txt, dòng đầu cho chúng ta biết được trạng thái của rubik sau khi thực hiện xoay "F". Đối với các bạn chơi rubik thì điều này sẽ tương đối dễ hiểu. Đoạn sau có sự xuất hiện của IV và KEY, mình có thể nhận ra dạng mã hóa CBC. Ở đây chúng ta thấy IV dài 54-bytes, nên mình sẽ phải chia cipher text ra từng block 54-bytes. Key cho thuật toán mã hóa trong CBC lần này là một tổ hợp xoay rubik.
+
+Vậy thì ở đây, điều khó nhất là mình phải dựng được hàm để xoay rubik bằng python. May mắn cho mình, challenge này tương tự như một challenge trong giải rgbCTF 2020 - RubikCBC. Ở trong writeup [này](https://dunsp4rce.github.io/rgbCTF-2020/cryptography/2020/07/14/RubikCBC.html), người viết đã dựng sẵn cho mình hàm _scramble_. Việc cần làm còn lại là chia khối và giải mã theo CBC.
+
+```python
 def scramble(move, cube): 
     rounds = 1 
     if len(move) > 1: 
@@ -510,13 +554,16 @@ ciphertext = b';V".24$9\x0cw`\x02 \x16\x0b9j:2F\x128-x?\x05C\x1b3$\nShX*W\x01,\x
 
 print(decrypt(ciphertext, moves))
 ```
-Flag: CHH{wh0_kn3w_rub1k_puzzl3_c4n_b3_u53d_f0r_3ncryp710n_t00?}
+
+Flag: _CHH{wh0\_kn3w\_rub1k\_puzzl3\_c4n\_b3\_u53d\_f0r\_3ncryp710n\_t00?}_
+
 ### RSA Percent Leak
+
 Hệ thống mã hóa RSA đã vô tình để lộ quan hệ giữa p và q (thể hiện bởi l), sử dụng l để tái tạo p, q, và thu hồi flag.\
 **Format FLAG: CHH{XXX}**
 
-Attachment:
-server.py
+Attachment: server.py
+
 ```python3
 from Crypto.Util.number import *
 from secret import flag
@@ -536,8 +583,71 @@ if __name__ == '__main__':
     # c = 0x56b894058c86db8641f2586a94794662520de144dbfbd0d3ad36a50b81b6d70a6a1d6f3e7faf2b37b1c53127e5684d235191664741ff2f0516c3d7596f3995abdd16a171be43f5660c9d4620db64f2430ae8c314f5576d912aae2e643517466b3fb409b4589b4726f12f3c376de45960dafdb658279b232118e6a9b1383ef600cdef465c499d330776c89cc5e0d02ec97a0614bc1d557f4e53595772bf02310105fe0ff8e27ba0376500990e6e8b2eb318bfa20f46b62c8841e8f97e8b649a2b18e4d6dc1bc2184184288559f8e43043bbff6f27479aa7846dac4f1d9e62ee3167fe511a6606f4ff69fb61bb4d2610913bc85e57144b0fe58cfca8e8b2ba996e
 
 ```
-Ở đây, challenge đã cho mình sẵn n, l, c. Việc cần làm của mình ở đây là tìm ra d để có thể giải mã RSA. Để tìm được d thì phải biết phi, nghĩa là phải tính được p,q.  Tuy nhiên, vấn đề ở chỗ p và q là 2 số nguyên tố lớn vl (1024-bit). Để mà factor được n dường như là điều không thể. Vậy thì tìm p,q thế nào bây giờ?
 
-Có một dữ kiện được leak ra là l = (p & q) * (p ^ q) | 0x1337. Với
+Ở đây, challenge đã cho mình sẵn n, l, c. Việc cần làm của mình ở đây là tìm ra d để có thể giải mã RSA. Để tìm được d thì phải biết phi, nghĩa là phải tính được p,q. Tuy nhiên, vấn đề ở chỗ p và q là 2 số nguyên tố lớn vl (1024-bit). Để mà factor được n dường như là điều không thể. Vậy thì tìm p,q thế nào bây giờ?
+
+Có một dữ kiện được leak ra là l = (p & q) \* (p ^ q) | 0x1337. Với ...
+
+```python
+from Crypto.Util.number import inverse, long_to_bytes as l2b
+from itertools import product
+from tqdm import tqdm
+n = 0xa7643b16219097b5cc47af0acfbb208b2717aa2c2dbdbd37a3e6f6f40ae12b77e8d129eb672d660b6e146682a32d70c01f8e481b90b5ec710dabb57e8de2661fd49ec9d3a23d159bd5fb397047a1e053bbbf579d996e7fe7af56332753b816f4a5353966bfe50b7e0d95d9f235f5edfd59e23d3a7523cd25ea6e34a6f16f2d14b21c43f3bb7b68a8b2237a77fb6cb4cf3ba3987c478a39391b0f42a0d0230846a054599fea4effe27fcd9b514f711831b38f0288db256deef967f3d3d20b9e0071027b99cae1b0a3bd452efd654d1a4a431291ba8a99743d44a35afcb1db267a8c63574ac1ef32c8e71de473cc98aea927e3de0daf5819600818edac66b74b9b
+c = 0x56b894058c86db8641f2586a94794662520de144dbfbd0d3ad36a50b81b6d70a6a1d6f3e7faf2b37b1c53127e5684d235191664741ff2f0516c3d7596f3995abdd16a171be43f5660c9d4620db64f2430ae8c314f5576d912aae2e643517466b3fb409b4589b4726f12f3c376de45960dafdb658279b232118e6a9b1383ef600cdef465c499d330776c89cc5e0d02ec97a0614bc1d557f4e53595772bf02310105fe0ff8e27ba0376500990e6e8b2eb318bfa20f46b62c8841e8f97e8b649a2b18e4d6dc1bc2184184288559f8e43043bbff6f27479aa7846dac4f1d9e62ee3167fe511a6606f4ff69fb61bb4d2610913bc85e57144b0fe58cfca8e8b2ba996e
+l = 0x168b7f77f276e7f9f55df25d096cd5abbf632f22eae79ba72bad2d60ebccb03c6b614be2c682d58655a335277afa171fb085b40519311be7e74d26d37a066d9487ce511ad72e54779225534ca37c2714e51aca763676590dc2fb1e70c66dc8113704e168d46ab91fd8cdc77738314be6e1b20fc5664b747dddc94ff17f2fc7c80e75bcdc1c3618c54144070f13e698b31ff3d601559a1dafb62904c1079d7ba69ec5d024068dd3b2e6c2d71e4a81589734a5c6e4d4a05335edaf42e9aacf339f930ffb909fa100398eff29a61cb2e58eeff756b5a7b101d69f1e11fa989431bc175e0d59264da400f2d63dfaf1b2ba27ee9698a6a9a83bfe57aab0c069089fff
+
+def hint(p, q):
+    return (p & q) * (p ^ q) | 0x1337
+
+def get_last_n_bit(num, nbit):
+  return num & ((1 << nbit) - 1)
+
+guess = []
+for bp, bq in product(range(2), repeat=2):
+  if hint(bp, bq) & 1 == l & 1 and (bp * bq) & 1 == n & 1:
+    # Tìm bit cuối
+    guess += [(bp, bq)]
+
+nbit = 1
+found = False
+bar = tqdm(total=1024)
+while not found:
+  nbit += 1
+  bar.update(1)
+
+  next_guess = []
+  for prev_p, prev_q in guess:
+    for bp, bq in product(range(2), repeat=2):
+      # Đoán bit tiếp theo
+      next_p = prev_p + bp * (1 << nbit - 1)
+      next_q = prev_q + bq * (1 << nbit - 1)
+      guess_l = hint(next_p, next_q)
+
+      if get_last_n_bit(guess_l, nbit) != get_last_n_bit(l, nbit):
+        continue
+
+      if get_last_n_bit(next_p * next_q, nbit) == get_last_n_bit(n, nbit):
+        next_guess += [(next_p, next_q)]
+
+  guess = next_guess
+
+  for p, q in guess:
+    if hint(p, q) == l and p * q == n:
+      print("FOUND")
+      print(f'{p = }')
+      print(f'{q = }')
+      found = (p, q)
+      break
+
+p, q = found
+e = 65537
+d = inverse(e, (p - 1) * (q - 1))
+print("FLAG:", l2b(pow(c, d, n)))
+bar.close()
+```
+
+Flag: _CHH{pl3453\_pr0v1d3\_4\_d3t41ll3d\_wr1t3up\_b3c4us3\_7h1s\_k1nd\_0f\_a77ack\_1s\_r4th3r\_r4r3}_
+
+
 
 **© 2023,Pham Quoc Trung. All rights reserved.**

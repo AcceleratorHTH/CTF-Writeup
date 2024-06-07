@@ -1,21 +1,26 @@
-# **FPTU SecAthon 2023**
+# FPTU SecAthon 2023
 
-# **CRYPTOGRAPHY WRITEUP**
+## **FPTU SecAthon 2023**
+
+## **CRYPTOGRAPHY WRITEUP**
 
 ## **Author:**
 
-- Pham Quoc Trung
+* Pham Quoc Trung
 
 ## **Used Language:**
 
-- Python3
+* Python3
 
 ## **Problem Solving:**
+
 ### Combine
+
 The symmetric crypto algorithm is much more secure, but the problem of key distribution is annoying. Why don't we combine both symmetric and asymmetric algorithm in a crypto system. What a brilliant idea!
 
-Attachment: *combine.py*
-```python3
+Attachment: _combine.py_
+
+```python
 #!/usr/bin/env python3
 
 from Crypto.Util.number import getStrongPrime, bytes_to_long
@@ -49,7 +54,9 @@ print('cipherkey =', c)
 print('ciphertext =', ciphertext)
 
 ```
-*output.txt*
+
+_output.txt_
+
 ```
 n = 17209865306489383127800020243389994329129743604782790572071575275930356482173664633977129059765483365641382694889746793832394394570779520318736174413698255275805470489995770799549145326336810606098666485462172397721883061380164674372281155031229403077923081446873681038939824476853501573626662210456685550050398627753809494063023262928406194832122173907376911569530179213802008987425021865006236985258208235745676711294952229465208427722435166889999294578405054346630724018303425483416613451938567146420297094727347064526763529390676971710365525083049556260598332852178425692853805520818042005192063672211992678540011
 e = 3
@@ -57,11 +64,11 @@ cipherkey = 14219672327374723889885217517391522024988783407987106895439929755532
 ciphertext = e6c2921a3edb52639e871ebad04f16ff4580870a8522295cf58914b09fee749afcdd94a0beb8471dbaa50ed37693653295d4e798798674e2048f5c233cd9aba1
 ```
 
-Ở đây, flag được mã hóa thông qua AES_ECB với block size là 16-bits, cùng với đó là key được mã hóa dựa trên RSA.
+Ở đây, flag được mã hóa thông qua AES\_ECB với block size là 16-bits, cùng với đó là key được mã hóa dựa trên RSA.
 
-Nhìn vào output được cung cấp, mình nhận thấy *e = 3*, dấu hiệu cho lỗ hổng *small e* trong RSA. Giải thích dễ hiểu thì khi *e* quá nhỏ, *m^e* sẽ nhỏ hơn *n*. Khi đó *m^e % n* sẽ bằng *m^e*. Vậy thì đơn giản để tìm lại được key, ta chỉ cần lấy căn bậc *e* của *cipherkey*.
+Nhìn vào output được cung cấp, mình nhận thấy _e = 3_, dấu hiệu cho lỗ hổng _small e_ trong RSA. Giải thích dễ hiểu thì khi _e_ quá nhỏ, _m^e_ sẽ nhỏ hơn _n_. Khi đó _m^e % n_ sẽ bằng _m^e_. Vậy thì đơn giản để tìm lại được key, ta chỉ cần lấy căn bậc _e_ của _cipherkey_.
 
-```python3
+```python
 from Crypto.Util.number import *
 from sympy import *
 from Crypto.Cipher import AES
@@ -80,8 +87,9 @@ print(key)
 # key = "secret#keysummerSuperSecureAyyah"
 ```
 
-Với key tìm được, mình thực hiện giải mã AES_ECB và ra được flag.
-```python3
+Với key tìm được, mình thực hiện giải mã AES\_ECB và ra được flag.
+
+```python
 def unpad(s):
     return s[:-s[-1]]
 
@@ -100,16 +108,19 @@ decrypted_message = decrypt_message(key, ciphertext)
 print(decrypted_message)
 ```
 
-Flag: FUSEC{The_combine_crypto_system_is_really_secure!!!}
+Flag: _FUSEC{The\_combine\_crypto\_system\_is\_really\_secure!!!}_
 
 ### Secret Agent
+
 The secret agents share private information through a secret services. We take it from a napped agent, but cannot get its private information without knowing secret id. Wrong trials will punch me!
+
 ```
 nc 34.143.143.97 8000
 ```
 
-Attachment: *chal_server.py*
-```python3
+Attachment: _chal\_server.py_
+
+```python
 import base64
 import json
 import os
@@ -266,10 +277,11 @@ if __name__ == '__main__':
     main(sys.argv)
 ```
 
-Ở challenge này thì mình có thể tạo tài khoản và được cung cấp token cho tài khoản đó. Sau đó thì có thể thực hiện đăng nhập. Nếu mình có quyền "privileged_granted" thì có thể truy cập được vào mục *show flag* và lấy được flag.
+Ở challenge này thì mình có thể tạo tài khoản và được cung cấp token cho tài khoản đó. Sau đó thì có thể thực hiện đăng nhập. Nếu mình có quyền "privileged\_granted" thì có thể truy cập được vào mục _show flag_ và lấy được flag.
 
 Trước hết thì mình để ý hàm tạo user:
-```python3
+
+```python
 def create_user(requestHandler):
     requestHandler.request.sendall(b'Your client id: ')
     client_id = requestHandler.rfile.readline().rstrip(b'\n').decode()
@@ -282,7 +294,9 @@ def create_user(requestHandler):
     requestHandler.request.sendall(b"Your token: ")
     requestHandler.request.sendall(base64.b64encode(token) + b'\n')
 ```
-Có thể thấy, token là JSON dạng {"client_id": client_id, "privileged_granted": True} được mã hóa thông qua hàm encrypt và base64. Cũng từ đoạn code, mình thấy rằng có thể dễ dàng lấy được đoạn token của secret_client bằng cách để trống *client_id* khi tạo tài khoản.
+
+Có thể thấy, token là JSON dạng {"client\_id": client\_id, "privileged\_granted": True} được mã hóa thông qua hàm encrypt và base64. Cũng từ đoạn code, mình thấy rằng có thể dễ dàng lấy được đoạn token của secret\_client bằng cách để trống _client\_id_ khi tạo tài khoản.
+
 ```
 Super-secure secret sharing service for only privileged users!
 I dare you to get me!
@@ -294,8 +308,10 @@ I dare you to get me!
 Your client id:
 Your token: yDb0q2pNaoySGmGrFNNWNWooRRl4soz6/g9oMrcLQBmuO+6LMqJuD5Lqc+OzwCUidMuWixJjkx4Zcexawgfyz64c7DGgXDgizbAtIOtwFGBsN210v6bTPAwI/x/pJGmZ
 ```
-Tuy nhiên thì token này cũng chưa ra ngay được flag vì muốn đăng nhập chúng ta cần phải điền cả *client_id*. Vì vậy mình tiến tới xem xét các hàm liên quan tới mã hóa:
-```python3
+
+Tuy nhiên thì token này cũng chưa ra ngay được flag vì muốn đăng nhập chúng ta cần phải điền cả _client\_id_. Vì vậy mình tiến tới xem xét các hàm liên quan tới mã hóa:
+
+```python
 key = os.urandom(16)
 iv1 = os.urandom(16)
 iv2 = os.urandom(16)
@@ -314,8 +330,10 @@ def decrypt(msg):
     msg = unpad(aes1.decrypt(aes2.decrypt(enc)), 16)
     return msg
 ```
-Ở đây, hàm encrypt sử dụng 2 lần mã hóa AES_CBC với key, iv1, iv2 được gen ra từ hàm *os.random(16)* ở đầu chương trình. Quá trình mã hóa có thể được minh họa như sau:
-```
+
+Ở đây, hàm encrypt sử dụng 2 lần mã hóa AES\_CBC với key, iv1, iv2 được gen ra từ hàm _os.random(16)_ ở đầu chương trình. Quá trình mã hóa có thể được minh họa như sau:
+
+```python
                   [M_1]             [M_2]             [M_3]
 (CBC)               |                 |                 |
                     v                 v                 v 
@@ -336,8 +354,10 @@ def decrypt(msg):
                     v -------.        v -------.         v --- ...
                   [C_1]             [C_2]              [C_3]
 ```
+
 Quá trình thám mã:
-```
+
+```python
                   [C_1]             [C_2]             [C_3]
 (CBC)               |                 |                 |
                     v -------.        v -------.        v --- ...
@@ -363,8 +383,9 @@ Vì là CBC nên ở đây, mình sẽ thực hiện tấn công **Padding Oracl
 
 Với bài này, phần token trong login chính là nơi chúng ta thực hiện tấn công. Message "Failed! Check your token again\n" sẽ là cơ sở để phát hiện unpadding thành công hay không.
 
-Code: 
-```python3
+Code:
+
+```python
 from tqdm import tqdm
 from pwn import *
 from base64 import *
@@ -414,10 +435,13 @@ print(bytes(true_token))
 ```
 
 Output sau khoảng 10p:
+
 ```
 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"client_id": "fAiryTypeAn", "privileged_granted'
 ```
-Đến đây thì mình đã biết được *client_id* là fAiryTypeAn. Thử login với token đã lấy được từ trước, mình ra được flag.
+
+Đến đây thì mình đã biết được _client\_id_ là fAiryTypeAn. Thử login với token đã lấy được từ trước, mình ra được flag.
+
 ```
 Super-secure secret sharing service for only privileged users!
 I dare you to get me!
@@ -434,13 +458,16 @@ Your token: yDb0q2pNaoySGmGrFNNWNWooRRl4soz6/g9oMrcLQBmuO+6LMqJuD5Lqc+OzwCUidMuW
 > 1
 FUSEC{rewire_for_basic_padding_orarcle_attack_is_fresh_didnt_it???}
 ```
-Flag: FUSEC{rewire_for_basic_padding_orarcle_attack_is_fresh_didnt_it???}
+
+Flag: _FUSEC{rewire\_for\_basic\_padding\_orarcle\_attack\_is\_fresh\_didnt\_it???}_
 
 ### Special
+
 I'm experimenting a new attack techniques but it takes too much time to attack. How long do I have to wait?
 
-Attachment: *special.py*
-```python3
+Attachment: _special.py_
+
+```python
 #!/usr/bin/env python3
 
 from Crypto.Util.number import getRandomNBitInteger, isPrime, bytes_to_long
@@ -472,7 +499,8 @@ print('s =', s)
 print('c =', c)
 ```
 
-*output.txt*
+_output.txt_
+
 ```
 m = 6
 n = 5492976487480578679267506637417801509317575229841582749209362422880496777697661463095681941384511594820366511371078950067259638159638389989851901094616667910772899948116916895560657161074452965224886315236525532104338582761091946493205663174132497284245913314808985617596094177891747635436626372362419446572744233021469108886918772231670973970330484736435736890290124391275237703374323416608209748760112099103861040856470543532740357396508522280726638388570667399579137930936466246498207356915282942024097243750099523899175827041338927836612379110009635783586479804781742147071688918856302200006864480644483685727
@@ -481,8 +509,10 @@ r = 65871773553
 s = 50658050575
 c = 328506890795505985479314425320468974528937152189787155810049374466222414408309371075268525124782969010895427145735894650939612552930129921545287771508147208685473386844493855455126505968483417807661266701694249679381494984658286621393654760823114577720985012613334426848040215211775270445793784398458277660845650104875381989887737457174846940396779008778505642465746393480801263823838958304980787593119384354693228102651172949043206704478693630425605780458674874508775093796165405750695793617366872908551523437485079189142381300394920095207163887827407773610175995565670690368395275769023963778492110094765806536
 ```
+
 Bài này thì cũng là một dạng về RSA. Từ code, ta thấy được hai số p,q được tạo ra từ hàm sau:
-```python3
+
+```python
 def genSpecialPrime(m, lsbit, nbit):
 	while True:
 		a = getRandomNBitInteger(nbit // m)
@@ -491,19 +521,24 @@ def genSpecialPrime(m, lsbit, nbit):
 		if r < 2*a**(m/2) and isPrime(p):
 			return p, r
 ```
-Chúng ta đã biết n, e, c nhưng chúng đều ở trong điều kiện đủ để không khai thác được các cách thông dụng. Nhận thấy ngoài ra mình còn được cung cấp cả r,s là 2 giá trị trả về cùng với p,q dựa trên hàm gen số nguyên tố, mình đoán có thể khôi phục p,q bằng cách nào đó.
-Xem xét kĩ hàm *genSpecialPrime*, mình nhận thấy số nguyên tố trả về có dạng *a**m + r*. Dựa trên số liệu bài cho, mình có thể viết lại p,q như sau:
+
+Chúng ta đã biết n, e, c nhưng chúng đều ở trong điều kiện đủ để không khai thác được các cách thông dụng. Nhận thấy ngoài ra mình còn được cung cấp cả r,s là 2 giá trị trả về cùng với p,q dựa trên hàm gen số nguyên tố, mình đoán có thể khôi phục p,q bằng cách nào đó. Xem xét kĩ hàm _genSpecialPrime_, mình nhận thấy số nguyên tố trả về có dạng _a\*\*m + r_. Dựa trên số liệu bài cho, mình có thể viết lại p,q như sau:
+
 ```
 p = a^6 + r
 q = b^6 + s
 ```
-Do đã biết n, và n = p * q, mình có:
+
+Do đã biết n, và n = p \* q, mình có:
+
 ```
 n = (a^6 + r)*(b^6 + s)
 <=> (a*b)^6 + s*a^6 + r*b^6 + r*s - n = 0
 Đặt a*b = x
 ```
+
 Đến đây thì mình cũng khá là bế tắc. Sau khi bú chút hint thì mình nhận ra r,s là 2 số khá nhỏ. Khi đó, n sẽ xấp xỉ bằng (a\*b)^6. Để gần hơn thì mình sẽ lấy a\*b = căn bậc 6 của n-r\*s
+
 ```
 s*a^6 + r*b^6 = n - r*s - x^6
 Đặt n - r*s - x^6 = y
@@ -511,8 +546,10 @@ s*a^6 + r*b^6 = n - r*s - x^6
 Nhân cả 2 vế với a^6
 <=> s*a^12 + r*x^6 - y*a^6 = 0
 ```
+
 Phương trình trên là phương trình bậc 2 1 ẩn, hoàn toàn có thể giải ra được a. Từ đó ta sẽ có được b và tính được p,q. Lúc đó, bài toán RSA sẽ không còn gì khó nữa.
-```python3
+
+```python
 n = 5492976487480578679267506637417801509317575229841582749209362422880496777697661463095681941384511594820366511371078950067259638159638389989851901094616667910772899948116916895560657161074452965224886315236525532104338582761091946493205663174132497284245913314808985617596094177891747635436626372362419446572744233021469108886918772231670973970330484736435736890290124391275237703374323416608209748760112099103861040856470543532740357396508522280726638388570667399579137930936466246498207356915282942024097243750099523899175827041338927836612379110009635783586479804781742147071688918856302200006864480644483685727
 e = 65537
 r = 65871773553
@@ -540,14 +577,7 @@ d = int(pow(e, -1, (p-1)* (q-1)))
 
 print(long_to_bytes(int(pow(c,d,n))))
 ```
-Flag: FUSEC(Simplifier_LSB_Attack_On_Special_Small_Cases_for_RSA)
+
+Flag: _FUSEC(Simplifier\_LSB\_Attack\_On\_Special\_Small\_Cases\_for\_RSA)_
 
 **© 2023,Pham Quoc Trung. All rights reserved.**
-
-
-
-
-
-
-
-
